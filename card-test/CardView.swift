@@ -5,7 +5,7 @@ struct Card: Identifiable {
     var imagePath: String
     var directoryPath: String
     var bundleName: String
-    var format: String
+    var backgroundFileName: String
 
     var id: String {
         directoryPath
@@ -28,12 +28,8 @@ struct CardView: View {
         return card.directoryPath
     }
 
-    private var cardBasePath: String {
-        return cardDirectoryPath + "/cardBackgroundCombined"
-    }
-
     private var targetPath: String {
-        return cardBasePath + card.format
+        return cardDirectoryPath + "/" + card.backgroundFileName
     }
 
     private var backupPath: String {
@@ -41,7 +37,10 @@ struct CardView: View {
     }
 
     private var cachePath: String {
-        return cardDirectoryPath.replacingOccurrences(of: "pkpass", with: "cache")
+        if cardDirectoryPath.lowercased().hasSuffix(".pkpass") {
+            return cardDirectoryPath.replacingOccurrences(of: "pkpass", with: "cache")
+        }
+        return cardDirectoryPath + ".cache"
     }
 
     private func removeCacheIfPresent() {
@@ -61,7 +60,8 @@ struct CardView: View {
     }
 
     private func previewImage() -> UIImage? {
-        if card.format == ".pdf" {
+        let lower = card.backgroundFileName.lowercased()
+        if lower.hasSuffix(".pdf") {
             guard let doc = PDFDocument(url: URL(fileURLWithPath: card.imagePath)),
                   let page = doc.page(at: 0) else {
                 return nil
@@ -127,8 +127,9 @@ struct CardView: View {
     }
 
     private func setImage(image: UIImage) {
-        switch card.format {
-        case "@2x.png":
+        let lower = card.backgroundFileName.lowercased()
+
+        if lower.hasSuffix(".png") {
             guard let data = image.pngData() else {
                 errorMessage = "Could not encode PNG"
                 showError = true
@@ -136,7 +137,7 @@ struct CardView: View {
             }
             applyReplacementData(data)
 
-        case ".pdf":
+        } else if lower.hasSuffix(".pdf") {
             let pdfDocument = PDFDocument()
             guard let page = PDFPage(image: image) else {
                 errorMessage = "Unable to create PDF page"
@@ -152,7 +153,7 @@ struct CardView: View {
             }
             applyReplacementData(data)
 
-        default:
+        } else {
             errorMessage = "Unknown format"
             showError = true
         }

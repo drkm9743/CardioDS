@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @StateObject private var exploit = ExploitManager.shared
@@ -7,8 +8,16 @@ struct ContentView: View {
     @State private var detectedCardsRoot = "not-detected"
     @State private var usedKfsForScan = false
     @State private var offsetInput = ""
+    @State private var showLogShareSheet = false
+    @State private var shareItems: [Any] = []
 
     private let helper = ObjcHelper()
+
+    private struct CardBundleCandidate {
+        let directoryPath: String
+        let bundleName: String
+        let backgroundFileName: String
+    }
 
     private func joinPath(_ parent: String, _ child: String) -> String {
         if parent.hasSuffix("/") {
@@ -17,26 +26,123 @@ struct ContentView: View {
         return parent + "/" + child
     }
 
+    private func scanLog(_ message: String) {
+        exploit.addLog("[scan] \(message)")
+    }
+
+    private func pathVariants(for path: String) -> [String] {
+        var variants: [String] = [path]
+        if path.hasPrefix("/private/var/") {
+            variants.append(String(path.dropFirst("/private".count)))
+        } else if path.hasPrefix("/var/") {
+            variants.append("/private" + path)
+        }
+
+        var unique: [String] = []
+        for variant in variants where !unique.contains(variant) {
+            unique.append(variant)
+        }
+        return unique
+    }
+
     private func listDirectory(_ path: String, usedKfs: inout Bool) -> [String] {
         let fm = FileManager.default
-        if let direct = try? fm.contentsOfDirectory(atPath: path) {
-            return direct
+
+        for variant in pathVariants(for: path) {
+            if let direct = try? fm.contentsOfDirectory(atPath: variant) {
+                return direct
+            }
         }
 
         guard exploit.kfsReady else {
             return []
         }
 
-        let viaKfs = helper.kfsListDirectory(path)
-        if !viaKfs.isEmpty {
-            usedKfs = true
+        for variant in pathVariants(for: path) {
+            let viaKfs = helper.kfsListDirectory(variant)
+            if !viaKfs.isEmpty {
+                usedKfs = true
+                return viaKfs
+            }
         }
-        return viaKfs
+
+        return []
     }
 
-    private func hasCardBundles(at path: String, usedKfs: inout Bool) -> Bool {
-        let entries = listDirectory(path, usedKfs: &usedKfs)
-        return entries.contains { $0.hasSuffix("pkpass") }
+    private func cardBackgroundFile(in cardDirectory: String, usedKfs: inout Bool) -> String? {
+        let files = listDirectory(cardDirectory, usedKfs: &usedKfs)
+        guard !files.isEmpty else {
+            return nil
+        }
+
+        let preferred = [
+            "cardBackgroundCombined@2x.png",
+            "cardBackgroundCombined@3x.png",
+            "cardBackgroundCombined.png",
+            "cardBackgroundCombined.pdf"
+        ]
+
+        for name in preferred where files.contains(name) {
+            return name
+        }
+
+        return files.first { file in
+            let lower = file.lowercased()
+            return lower.hasPrefix("cardbackgroundcombined") && (lower.hasSuffix(".png") || lower.hasSuffix(".pdf"))
+        }
+    }
+
+    private func collectCardBundles(in cardsRoot: String, usedKfs: inout Bool) -> [CardBundleCandidate] {
+        let entries = listDirectory(cardsRoot, usedKfs: &usedKfs)
+        guard !entries.isEmpty else {
+            return []
+        }
+
+        var bundles: [CardBundleCandidate] = []
+        var seenDirectories: Set<String> = []
+
+        for entry in entries {
+            if entry == "." || entry == ".." {
+                continue
+            }
+
+            let candidateDirectory = joinPath(cardsRoot, entry)
+            if let backgroundFile = cardBackgroundFile(in: candidateDirectory, usedKfs: &usedKfs) {
+                if !seenDirectories.contains(candidateDirectory) {
+                    bundles.append(
+                        CardBundleCandidate(
+                            directoryPath: candidateDirectory,
+                            bundleName: entry,
+                            backgroundFileName: backgroundFile
+                        )
+                    )
+                    seenDirectories.insert(candidateDirectory)
+                }
+                continue
+            }
+
+            // On some versions, card bundles are nested one level deeper.
+            let nestedEntries = listDirectory(candidateDirectory, usedKfs: &usedKfs)
+            for nested in nestedEntries {
+                if nested == "." || nested == ".." {
+                    continue
+                }
+
+                let nestedDirectory = joinPath(candidateDirectory, nested)
+                if let backgroundFile = cardBackgroundFile(in: nestedDirectory, usedKfs: &usedKfs), !seenDirectories.contains(nestedDirectory) {
+                    bundles.append(
+                        CardBundleCandidate(
+                            directoryPath: nestedDirectory,
+                            bundleName: "\(entry)/\(nested)",
+                            backgroundFileName: backgroundFile
+                        )
+                    )
+                    seenDirectories.insert(nestedDirectory)
+                }
+            }
+        }
+
+        return bundles
     }
 
     private func discoverCardsRoot(usedKfs: inout Bool) -> String? {
@@ -49,8 +155,12 @@ struct ContentView: View {
             candidates.append(candidate)
         }
 
-        for candidate in candidates where hasCardBundles(at: candidate, usedKfs: &usedKfs) {
-            return candidate
+        for candidate in candidates {
+            let found = collectCardBundles(in: candidate, usedKfs: &usedKfs)
+            if !found.isEmpty {
+                scanLog("candidate \(candidate) yielded \(found.count) card bundle(s)")
+                return candidate
+            }
         }
 
         let passContainers = [
@@ -63,12 +173,12 @@ struct ContentView: View {
 
             for primary in ["Cards", "Passes", "Wallet"] where topEntries.contains(primary) {
                 let candidate = joinPath(container, primary)
-                if hasCardBundles(at: candidate, usedKfs: &usedKfs) {
+                if !collectCardBundles(in: candidate, usedKfs: &usedKfs).isEmpty {
                     return candidate
                 }
 
                 let nestedCards = joinPath(candidate, "Cards")
-                if hasCardBundles(at: nestedCards, usedKfs: &usedKfs) {
+                if !collectCardBundles(in: nestedCards, usedKfs: &usedKfs).isEmpty {
                     return nestedCards
                 }
             }
@@ -84,18 +194,37 @@ struct ContentView: View {
                 }
 
                 let candidate = joinPath(container, entry)
-                if hasCardBundles(at: candidate, usedKfs: &usedKfs) {
+                if !collectCardBundles(in: candidate, usedKfs: &usedKfs).isEmpty {
                     return candidate
                 }
 
                 let nestedCards = joinPath(candidate, "Cards")
-                if hasCardBundles(at: nestedCards, usedKfs: &usedKfs) {
+                if !collectCardBundles(in: nestedCards, usedKfs: &usedKfs).isEmpty {
                     return nestedCards
                 }
             }
         }
 
+        scanLog("no card bundles found in known pass containers")
         return nil
+    }
+
+    private func buildLogExportText() -> String {
+        let timestamp = ISO8601DateFormatter().string(from: Date())
+        let header = [
+            "CardioSword diagnostic export",
+            "timestamp=\(timestamp)",
+            "status=\(exploit.statusMessage)",
+            "darksword_ready=\(exploit.darkswordReady)",
+            "kfs_ready=\(exploit.kfsReady)",
+            "kernproc_offset=\(exploit.hasKernprocOffset ? String(format: \"0x%llx\", exploit.kernprocOffset) : \"missing\")",
+            "cards_root=\(detectedCardsRoot)",
+            "scan_mode=\(usedKfsForScan ? \"kfs\" : \"direct\")",
+            ""
+        ].joined(separator: "\n")
+
+        let body = exploit.logText.isEmpty ? "No logs yet." : exploit.logText
+        return header + body
     }
 
     private func loadCards() {
@@ -116,31 +245,18 @@ struct ContentView: View {
 
         var data = [Card]()
 
-        let passes = listDirectory(cardsRoot, usedKfs: &usedKfs).filter { $0.hasSuffix("pkpass") }
+        let bundles = collectCardBundles(in: cardsRoot, usedKfs: &usedKfs)
+        scanLog("final scan root=\(cardsRoot) bundles=\(bundles.count)")
 
-        for pass in passes {
-            let cardDirectory = joinPath(cardsRoot, pass)
-            let files = listDirectory(cardDirectory, usedKfs: &usedKfs)
-
-            if files.contains("cardBackgroundCombined@2x.png") {
-                data.append(
-                    Card(
-                        imagePath: joinPath(cardDirectory, "cardBackgroundCombined@2x.png"),
-                        directoryPath: cardDirectory,
-                        bundleName: pass,
-                        format: "@2x.png"
-                    )
+        for bundle in bundles {
+            data.append(
+                Card(
+                    imagePath: joinPath(bundle.directoryPath, bundle.backgroundFileName),
+                    directoryPath: bundle.directoryPath,
+                    bundleName: bundle.bundleName,
+                    backgroundFileName: bundle.backgroundFileName
                 )
-            } else if files.contains("cardBackgroundCombined.pdf") {
-                data.append(
-                    Card(
-                        imagePath: joinPath(cardDirectory, "cardBackgroundCombined.pdf"),
-                        directoryPath: cardDirectory,
-                        bundleName: pass,
-                        format: ".pdf"
-                    )
-                )
-            }
+            )
         }
 
         usedKfsForScan = usedKfs
@@ -239,7 +355,7 @@ struct ContentView: View {
             }
 
             HStack(spacing: 10) {
-                Button(exploit.darkswordRunning ? "Running Darksword..." : "Run Darksword") {
+                Button(exploit.darkswordRunning ? "Running DarkSword..." : "Run DarkSword") {
                     exploit.runDarksword { _ in
                         recheckAndReload()
                     }
@@ -259,6 +375,20 @@ struct ContentView: View {
                     runAllAndReload()
                 }
                 .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                .foregroundColor(.white)
+            }
+
+            HStack(spacing: 10) {
+                Button("Copy Logs") {
+                    UIPasteboard.general.string = buildLogExportText()
+                    scanLog("logs copied to clipboard")
+                }
+                .foregroundColor(.white)
+
+                Button("Share Logs") {
+                    shareItems = [buildLogExportText()]
+                    showLogShareSheet = true
+                }
                 .foregroundColor(.white)
             }
 
@@ -349,7 +479,20 @@ struct ContentView: View {
             recheckAndReload()
             refreshOffsetInputFromState()
         }
+        .sheet(isPresented: $showLogShareSheet) {
+            ShareSheet(activityItems: shareItems)
+        }
     }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 struct ContentView_Previews: PreviewProvider {
