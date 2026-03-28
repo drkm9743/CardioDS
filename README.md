@@ -53,26 +53,3 @@ What this does not include:
 	`/var/mobile/Library/Passes/Cards`.
 4. Pick a card, set an image, and let the app refresh Wallet services.
 5. If changes do not appear immediately, re-open Wallet after the UI restart.
-
-## Can I compile from Windows?
-
-Short answer: yes, indirectly.
-
-- Native local iOS build requires Xcode on macOS.
-- From Windows, the practical route is a remote macOS build.
-
-This repo now includes `.github/workflows/build-ios.yml` which builds an
-unsigned IPA on GitHub Actions (macOS runner):
-
-1. Push your branch to GitHub.
-2. Open **Actions** tab and run **Build iOS IPA (unsigned)**.
-3. Download the artifact `cardio-unsigned-ipa`.
-4. Sign/install from Windows with your usual toolchain.
-
-## Can I compile directly on iPhone?
-
-For this Swift/Xcode app, realistically no.
-
-- iPhone does not provide a full Xcode + iOS SDK environment.
-- On-device toolchains in jailbreak contexts are typically for Theos/tweaks/C,
-	not a full SwiftUI app project like this.
