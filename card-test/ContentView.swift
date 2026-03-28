@@ -217,9 +217,9 @@ struct ContentView: View {
             "status=\(exploit.statusMessage)",
             "darksword_ready=\(exploit.darkswordReady)",
             "kfs_ready=\(exploit.kfsReady)",
-            "kernproc_offset=\(exploit.hasKernprocOffset ? String(format: \"0x%llx\", exploit.kernprocOffset) : \"missing\")",
+            "kernproc_offset=\(exploit.hasKernprocOffset ? String(format: "0x%llx", exploit.kernprocOffset) : "missing")",
             "cards_root=\(detectedCardsRoot)",
-            "scan_mode=\(usedKfsForScan ? \"kfs\" : \"direct\")",
+            "scan_mode=\(usedKfsForScan ? "kfs" : "direct")",
             ""
         ].joined(separator: "\n")
 
