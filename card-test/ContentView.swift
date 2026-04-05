@@ -8,8 +8,7 @@ struct ContentView: View {
     @State private var detectedCardsRoot = "not-detected"
     @State private var usedKfsForScan = false
     @State private var offsetInput = ""
-    @State private var showLogShareSheet = false
-    @State private var shareItems: [Any] = []
+
 
     private let helper = ObjcHelper()
 
@@ -365,12 +364,7 @@ struct ContentView: View {
                 }
                 .foregroundColor(.white)
 
-                Button("Import lara") {
-                    _ = exploit.importLaraKernprocOffset()
-                    refreshOffsetInputFromState()
-                    recheckAndReload()
-                }
-                .foregroundColor(.white)
+
             }
 
             HStack(spacing: 10) {
@@ -404,11 +398,7 @@ struct ContentView: View {
                 }
                 .foregroundColor(.white)
 
-                Button("Share Logs") {
-                    shareItems = [buildLogExportText()]
-                    showLogShareSheet = true
-                }
-                .foregroundColor(.white)
+
             }
 
             ScrollView {
@@ -513,20 +503,8 @@ struct ContentView: View {
             recheckAndReload()
             refreshOffsetInputFromState()
         }
-        .sheet(isPresented: $showLogShareSheet) {
-            ShareSheet(activityItems: shareItems)
-        }
+
     }
-}
-
-struct ShareSheet: UIViewControllerRepresentable {
-    let activityItems: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 struct ContentView_Previews: PreviewProvider {
