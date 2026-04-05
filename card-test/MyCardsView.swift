@@ -137,12 +137,12 @@ struct MyCardsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("My Cards")
+                    Text("mycards_title")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
 
-                    Text("Save backups of your current Apple Pay card art.")
+                    Text("mycards_subtitle")
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.6))
                         .padding(.horizontal, 16)
@@ -154,7 +154,7 @@ struct MyCardsView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.on.square")
-                                Text("Backup All Current Cards")
+                                Text("mycards_backup_all")
                             }
                             .font(.system(size: 14, weight: .semibold))
                             .frame(maxWidth: .infinity)
@@ -165,7 +165,7 @@ struct MyCardsView: View {
                         }
                         .padding(.horizontal, 16)
                     } else {
-                        Text("No device cards detected. Run the exploit and scan first.")
+                        Text("mycards_no_device_cards")
                             .font(.system(size: 13))
                             .foregroundColor(.orange)
                             .padding(.horizontal, 16)
@@ -177,10 +177,10 @@ struct MyCardsView: View {
                             Image(systemName: "tray")
                                 .font(.system(size: 36))
                                 .foregroundColor(.gray)
-                            Text("No saved cards yet")
+                            Text("mycards_empty")
                                 .font(.system(size: 16))
                                 .foregroundColor(.gray)
-                            Text("Backup your current cards to keep them safe before customizing.")
+                            Text("mycards_empty_hint")
                                 .font(.system(size: 12))
                                 .foregroundColor(.white.opacity(0.4))
                                 .multilineTextAlignment(.center)
@@ -209,26 +209,26 @@ struct MyCardsView: View {
         .onChange(of: vm.statusMessage) { msg in
             if msg != nil { showAlert = true }
         }
-        .alert("My Cards", isPresented: $showAlert) {
-            Button("OK") { vm.statusMessage = nil }
+        .alert(NSLocalizedString("mycards_title", comment: ""), isPresented: $showAlert) {
+            Button("card_ok") { vm.statusMessage = nil }
         } message: {
             Text(vm.statusMessage ?? "")
         }
-        .alert("Delete Card", isPresented: .init(
+        .alert(NSLocalizedString("mycards_delete_title", comment: ""), isPresented: .init(
             get: { cardToDelete != nil },
             set: { if !$0 { cardToDelete = nil } }
         )) {
-            Button("Delete", role: .destructive) {
+            Button(NSLocalizedString("mycards_delete", comment: ""), role: .destructive) {
                 if let card = cardToDelete {
                     vm.deleteCard(card)
                     cardToDelete = nil
                 }
             }
-            Button("Cancel", role: .cancel) {
+            Button(NSLocalizedString("card_cancel", comment: ""), role: .cancel) {
                 cardToDelete = nil
             }
         } message: {
-            Text("Remove this saved card backup?")
+            Text("mycards_delete_confirm")
         }
     }
 
@@ -321,7 +321,7 @@ struct SavedCardRow: View {
                     Button {
                         onApply()
                     } label: {
-                        Label("Apply", systemImage: "arrow.uturn.backward")
+                        Label("mycards_apply", systemImage: "arrow.uturn.backward")
                             .font(.system(size: 11, weight: .medium))
                     }
                     .foregroundColor(.cyan)
@@ -329,7 +329,7 @@ struct SavedCardRow: View {
                     Button {
                         onDelete()
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("mycards_delete", systemImage: "trash")
                             .font(.system(size: 11, weight: .medium))
                     }
                     .foregroundColor(.red.opacity(0.8))

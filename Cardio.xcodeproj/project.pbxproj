@@ -21,6 +21,8 @@
 		D100001028E8000000AAA002 /* sandbox_escape.m in Sources */ = {isa = PBXBuildFile; fileRef = D100001128E8000000AAA002 /* sandbox_escape.m */; };
 		D100002028E8000000AAA003 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D100002128E8000000AAA003 /* CommunityView.swift */; };
 		D100003028E8000000AAA004 /* MyCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D100003128E8000000AAA004 /* MyCardsView.swift */; };
+		D200000128E9000000BBB001 /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = D200000228E9000000BBB001 /* offsets.m */; };
+		D200001028E9000000BBB010 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D200001128E9000000BBB010 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,10 @@
 		D100001228E8000000AAA002 /* sandbox_escape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sandbox_escape.h; sourceTree = "<group>"; };
 		D100002128E8000000AAA003 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		D100003128E8000000AAA004 /* MyCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCardsView.swift; sourceTree = "<group>"; };
+		D200000228E9000000BBB001 /* offsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
+		D200000328E9000000BBB001 /* offsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
+		D200000428E9000000BBB001 /* xpf_minimal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpf_minimal.h; sourceTree = "<group>"; };
+		D200000528E9000000BBB001 /* libgrabkernel2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libgrabkernel2.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +96,7 @@
 				8A928BA028E5F04800EADBA5 /* ObjcHelper.m */,
 				8A928B9F28E5F04800EADBA5 /* card-test-Bridging-Header.h */,
 				8A928BA228E5F06D00EADBA5 /* ObjcHelper.h */,
+				D200001128E9000000BBB010 /* Localizable.strings */,
 			);
 			path = "card-test";
 			sourceTree = "<group>";
@@ -105,6 +112,10 @@
 				D100000A28E8000000AAA001 /* utils.h */,
 				D100001128E8000000AAA002 /* sandbox_escape.m */,
 				D100001228E8000000AAA002 /* sandbox_escape.h */,
+				D200000228E9000000BBB001 /* offsets.m */,
+				D200000328E9000000BBB001 /* offsets.h */,
+				D200000428E9000000BBB001 /* xpf_minimal.h */,
+				D200000528E9000000BBB001 /* libgrabkernel2.h */,
 			);
 			path = kexploit;
 			sourceTree = "<group>";
@@ -118,6 +129,24 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXVariantGroup section */
+		D200001128E9000000BBB010 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D200001228E9000000BBB011 /* en */,
+				D200001328E9000000BBB012 /* es */,
+				D200001428E9000000BBB013 /* fr */,
+				D200001528E9000000BBB014 /* it */,
+				D200001628E9000000BBB015 /* de */,
+				D200001728E9000000BBB016 /* ru */,
+				D200001828E9000000BBB017 /* zh-Hans */,
+				D200001928E9000000BBB018 /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin PBXNativeTarget section */
 		8AA5371B28E269E100146E99 /* Cardio */ = {
@@ -162,6 +191,13 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
+				fr,
+				it,
+				de,
+				ru,
+				"zh-Hans",
+				ja,
 			);
 			mainGroup = 8AA5371328E269E100146E99;
 			packageReferences = (
@@ -182,6 +218,7 @@
 			files = (
 				8AA5372728E269E200146E99 /* Preview Assets.xcassets in Resources */,
 				8AA5372428E269E200146E99 /* Assets.xcassets in Resources */,
+				D200001028E9000000BBB010 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +241,7 @@
 				8A928BA828E706AF00EADBA5 /* CardView.swift in Sources */,
 				D100002028E8000000AAA003 /* CommunityView.swift in Sources */,
 				D100003028E8000000AAA004 /* MyCardsView.swift in Sources */,
+				D200000128E9000000BBB001 /* offsets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,13 +371,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_ASSET_PATHS = "\"card-test/Preview Content\"";
 				DEVELOPMENT_TEAM = V46UGT9N8W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "card-test/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Cardio;
+				INFOPLIST_KEY_CFBundleDisplayName = CardioDS;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -351,7 +389,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cisc0freak.cardio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -375,13 +413,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_ASSET_PATHS = "\"card-test/Preview Content\"";
 				DEVELOPMENT_TEAM = V46UGT9N8W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "card-test/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Cardio;
+				INFOPLIST_KEY_CFBundleDisplayName = CardioDS;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -393,7 +431,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cisc0freak.cardio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

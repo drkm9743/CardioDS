@@ -1,0 +1,80 @@
+/* CardioDS — 简体中文 */
+
+"tab_cards" = "卡片";
+"tab_mycards" = "我的卡片";
+"tab_community" = "社区";
+"tab_exploit" = "漏洞利用";
+
+"cards_tap_to_customize" = "点击卡片进行自定义";
+"cards_swipe_hint" = "左右滑动查看更多卡片";
+"cards_refresh" = "刷新卡片";
+"cards_none_found" = "未找到卡片";
+"cards_none_found_alert" = "未找到卡片";
+"cards_path_label" = "路径：%@";
+"cards_last_root" = "上次找到的路径：%@";
+"cards_run_exploit_hint" = "前往漏洞利用选项卡并点击"全部运行"。";
+"cards_open_wallet" = "打开钱包";
+"cards_run_all_scan" = "全部运行 + 扫描";
+"cards_scan_again" = "重新扫描";
+
+"exploit_engine" = "漏洞利用引擎";
+"exploit_offset_placeholder" = "kernproc 偏移量 (hex)";
+"exploit_set" = "设置";
+"exploit_running" = "运行中…";
+"exploit_run_darksword" = "运行 DarkSword";
+"exploit_escape_sandbox" = "沙盒越狱";
+"exploit_run_all" = "全部运行";
+"exploit_complete" = "漏洞利用完成 — 沙盒已绕过";
+"exploit_copy_logs" = "复制日志";
+"exploit_no_logs" = "暂无日志。";
+"exploit_resolve_offsets" = "解析偏移量";
+"exploit_resolving" = "正在解析…";
+"exploit_clear_cache" = "清除内核缓存";
+
+"status_checking" = "正在检查环境…";
+"status_ready" = "就绪";
+"status_darksword_running" = "Darksword 运行中…";
+"status_resolving_offsets" = "正在解析内核偏移量…";
+"status_no_cards_path" = "未检测到卡片路径。";
+"status_missing_offset" = "缺少 kernproc 偏移量。正在自动解析…";
+"status_run_darksword" = "请先运行 Darksword。";
+"status_escape_sandbox" = "请先越狱沙盒以访问文件。";
+"status_not_ready" = "漏洞利用上下文未就绪。";
+"status_no_wallet_path" = "未找到钱包卡片路径。";
+"status_write_available" = "直接写入权限可用。";
+"status_no_write_import_offset" = "无写入权限。正在解析偏移量。";
+"status_no_write_run_exploit" = "无写入权限。请运行 Darksword + 沙盒越狱。";
+"status_no_write_escape" = "无写入权限。请先越狱沙盒。";
+"status_no_write_retry" = "沙盒绕过后仍无权限。请重试。";
+
+"card_rename" = "重命名";
+"card_restore" = "恢复";
+"card_save" = "保存";
+"card_error" = "错误";
+"card_ok" = "确定";
+"card_saved" = "已保存";
+"card_saved_message" = "卡片图片已保存到文稿。";
+"card_rename_title" = "重命名卡片";
+"card_nickname_placeholder" = "昵称";
+"card_rename_save" = "保存";
+"card_clear_name" = "清除名称";
+"card_cancel" = "取消";
+"card_rename_message" = "为此卡片设置一个名称以便识别。";
+
+"mycards_title" = "我的卡片";
+"mycards_subtitle" = "保存 Apple Pay 卡片备份。";
+"mycards_backup_all" = "备份所有卡片";
+"mycards_no_device_cards" = "未检测到卡片。请先运行漏洞利用。";
+"mycards_empty" = "没有已保存的卡片";
+"mycards_empty_hint" = "自定义前请先备份。";
+"mycards_delete_title" = "删除卡片";
+"mycards_delete" = "删除";
+"mycards_delete_confirm" = "确定删除此备份？";
+"mycards_apply" = "应用";
+
+"community_title" = "社区卡片";
+"community_subtitle" = "下载卡面背景或从照片图库应用。";
+"community_search" = "搜索卡片…";
+"community_attribution" = "卡片图片来自社区，托管于";
+"community_tap_retry" = "点击重试";
+"community_download" = "下载";

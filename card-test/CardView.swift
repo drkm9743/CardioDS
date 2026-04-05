@@ -310,7 +310,7 @@ struct CardView: View {
                     nicknameInput = CardNicknameManager.shared.nickname(for: card.directoryPath) ?? ""
                     showNicknameEditor = true
                 } label: {
-                    Label("Rename", systemImage: "pencil")
+                    Label("card_rename", systemImage: "pencil")
                         .font(.system(size: 13))
                 }
                 .foregroundColor(.white.opacity(0.7))
@@ -318,7 +318,7 @@ struct CardView: View {
                     Button {
                         resetImage()
                     } label: {
-                        Label("Restore", systemImage: "arrow.counterclockwise")
+                        Label("card_restore", systemImage: "arrow.counterclockwise")
                             .font(.system(size: 13))
                     }
                     .foregroundColor(.red)
@@ -327,35 +327,35 @@ struct CardView: View {
                 Button {
                     saveToDocuments()
                 } label: {
-                    Label("Save", systemImage: "square.and.arrow.down")
+                    Label("card_save", systemImage: "square.and.arrow.down")
                         .font(.system(size: 13))
                 }
                 .foregroundColor(.cyan)
             }
             .padding(.top, 4)
         }
-        .alert("Error", isPresented: $showError) {
-            Button("OK", role: .cancel) {}
+        .alert("card_error", isPresented: $showError) {
+            Button("card_ok", role: .cancel) {}
         } message: {
             Text(errorMessage)
         }
-        .alert("Saved", isPresented: $showSaved) {
-            Button("OK", role: .cancel) {}
+        .alert("card_saved", isPresented: $showSaved) {
+            Button("card_ok", role: .cancel) {}
         } message: {
-            Text("Card image saved to Documents folder. You can access it in the Files app.")
+            Text("card_saved_message")
         }
-        .alert("Rename Card", isPresented: $showNicknameEditor) {
-            TextField("Nickname", text: $nicknameInput)
-            Button("Save") {
+        .alert("card_rename_title", isPresented: $showNicknameEditor) {
+            TextField(NSLocalizedString("card_nickname_placeholder", comment: ""), text: $nicknameInput)
+            Button("card_rename_save") {
                 CardNicknameManager.shared.setNickname(nicknameInput.isEmpty ? nil : nicknameInput, for: card.directoryPath)
             }
-            Button("Clear Name", role: .destructive) {
+            Button("card_clear_name", role: .destructive) {
                 CardNicknameManager.shared.setNickname(nil, for: card.directoryPath)
                 nicknameInput = ""
             }
-            Button("Cancel", role: .cancel) {}
+            Button("card_cancel", role: .cancel) {}
         } message: {
-            Text("Give this card a name to identify it easily.\nBundle: \(card.bundleName)")
+            Text("card_rename_message")
         }
     }
 }

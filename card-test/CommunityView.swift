@@ -210,12 +210,12 @@ struct CommunityView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Community Cards")
+                    Text("community_title")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
 
-                    Text("Download card backgrounds and apply them from your photo library.")
+                    Text("community_subtitle")
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.6))
                         .padding(.horizontal, 16)
@@ -224,7 +224,7 @@ struct CommunityView: View {
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
-                        TextField("Search cards...", text: $vm.searchText)
+                        TextField(NSLocalizedString("community_search", comment: ""), text: $vm.searchText)
                             .foregroundColor(.white)
                     }
                     .padding(10)
@@ -263,7 +263,7 @@ struct CommunityView: View {
 
                     // Attribution
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Card images from the community at")
+                        Text("community_attribution")
                             .font(.system(size: 11))
                             .foregroundColor(.white.opacity(0.4))
                         Link("dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh",
@@ -371,7 +371,7 @@ struct CommunityCardCell: View {
                             VStack(spacing: 4) {
                                 Image(systemName: "arrow.clockwise")
                                     .foregroundColor(.orange)
-                                Text("Tap to retry")
+                                Text("community_tap_retry")
                                     .font(.system(size: 9))
                                     .foregroundColor(.orange)
                             }
@@ -409,7 +409,7 @@ struct CommunityCardCell: View {
                         .tint(.white)
                         .frame(height: 28)
                 } else {
-                    Label("Save", systemImage: "square.and.arrow.down")
+                    Label("community_download", systemImage: "square.and.arrow.down")
                         .font(.system(size: 12, weight: .medium))
                         .frame(height: 28)
                 }

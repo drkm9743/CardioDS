@@ -1,0 +1,80 @@
+/* CardioDS — 日本語 */
+
+"tab_cards" = "カード";
+"tab_mycards" = "マイカード";
+"tab_community" = "コミュニティ";
+"tab_exploit" = "エクスプロイト";
+
+"cards_tap_to_customize" = "カードをタップしてカスタマイズ";
+"cards_swipe_hint" = "スワイプして他のカードを表示";
+"cards_refresh" = "カードを更新";
+"cards_none_found" = "カードが見つかりません";
+"cards_none_found_alert" = "カードが見つかりません";
+"cards_path_label" = "パス：%@";
+"cards_last_root" = "最後に見つかったパス：%@";
+"cards_run_exploit_hint" = "エクスプロイトタブに移動し「すべて実行」をタップしてください。";
+"cards_open_wallet" = "Walletを開く";
+"cards_run_all_scan" = "すべて実行 + スキャン";
+"cards_scan_again" = "再スキャン";
+
+"exploit_engine" = "エクスプロイトエンジン";
+"exploit_offset_placeholder" = "kernproc オフセット (hex)";
+"exploit_set" = "設定";
+"exploit_running" = "実行中…";
+"exploit_run_darksword" = "DarkSword を実行";
+"exploit_escape_sandbox" = "サンドボックス脱出";
+"exploit_run_all" = "すべて実行";
+"exploit_complete" = "エクスプロイト完了 — サンドボックスを回避しました";
+"exploit_copy_logs" = "ログをコピー";
+"exploit_no_logs" = "ログはまだありません。";
+"exploit_resolve_offsets" = "オフセットを解析";
+"exploit_resolving" = "解析中…";
+"exploit_clear_cache" = "カーネルキャッシュをクリア";
+
+"status_checking" = "環境を確認中…";
+"status_ready" = "準備完了";
+"status_darksword_running" = "Darksword 実行中…";
+"status_resolving_offsets" = "カーネルオフセットを解析中…";
+"status_no_cards_path" = "カードのパスが検出されませんでした。";
+"status_missing_offset" = "kernproc オフセットがありません。自動解析中…";
+"status_run_darksword" = "まず Darksword を実行してください。";
+"status_escape_sandbox" = "ファイルにアクセスするにはサンドボックスを脱出してください。";
+"status_not_ready" = "エクスプロイトコンテキストが準備できていません。";
+"status_no_wallet_path" = "Walletカードのパスが見つかりません。";
+"status_write_available" = "直接書き込みアクセスが利用可能です。";
+"status_no_write_import_offset" = "書き込みアクセスなし。オフセットを解析中。";
+"status_no_write_run_exploit" = "書き込みアクセスなし。Darksword + サンドボックス脱出を実行してください。";
+"status_no_write_escape" = "書き込みアクセスなし。まずサンドボックスを脱出してください。";
+"status_no_write_retry" = "サンドボックス回避後もアクセスできません。再試行してください。";
+
+"card_rename" = "名前を変更";
+"card_restore" = "復元";
+"card_save" = "保存";
+"card_error" = "エラー";
+"card_ok" = "OK";
+"card_saved" = "保存完了";
+"card_saved_message" = "カード画像を書類に保存しました。";
+"card_rename_title" = "カード名を変更";
+"card_nickname_placeholder" = "ニックネーム";
+"card_rename_save" = "保存";
+"card_clear_name" = "名前をクリア";
+"card_cancel" = "キャンセル";
+"card_rename_message" = "このカードに識別用の名前を付けてください。";
+
+"mycards_title" = "マイカード";
+"mycards_subtitle" = "Apple Payカードのバックアップを保存します。";
+"mycards_backup_all" = "すべてバックアップ";
+"mycards_no_device_cards" = "カードが検出されません。まずエクスプロイトを実行してください。";
+"mycards_empty" = "保存されたカードはありません";
+"mycards_empty_hint" = "カスタマイズ前にバックアップしてください。";
+"mycards_delete_title" = "カードを削除";
+"mycards_delete" = "削除";
+"mycards_delete_confirm" = "このバックアップを削除しますか？";
+"mycards_apply" = "適用";
+
+"community_title" = "コミュニティカード";
+"community_subtitle" = "カード背景をダウンロードするかフォトライブラリから適用します。";
+"community_search" = "カードを検索…";
+"community_attribution" = "カード画像はコミュニティ提供";
+"community_tap_retry" = "タップして再試行";
+"community_download" = "ダウンロード";

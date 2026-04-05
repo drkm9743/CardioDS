@@ -7,3 +7,4 @@
 #import "kexploit/kfs.h"
 #import "kexploit/utils.h"
 #import "kexploit/sandbox_escape.h"
+#import "kexploit/offsets.h"

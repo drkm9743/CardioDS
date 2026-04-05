@@ -1,0 +1,87 @@
+/* CardioDS — English (Base) */
+
+/* Tab titles */
+"tab_cards" = "Cards";
+"tab_mycards" = "My Cards";
+"tab_community" = "Community";
+"tab_exploit" = "Exploit";
+
+/* Cards tab */
+"cards_tap_to_customize" = "Tap a card to customize";
+"cards_swipe_hint" = "Swipe to view different cards";
+"cards_refresh" = "Refresh Cards";
+"cards_none_found" = "No Cards Found";
+"cards_none_found_alert" = "No Cards Were Found";
+"cards_path_label" = "Path: %@";
+"cards_last_root" = "Last detected cards root: %@";
+"cards_run_exploit_hint" = "Go to the Exploit tab and tap Run All first.";
+"cards_open_wallet" = "Open Wallet";
+"cards_run_all_scan" = "Run All + Scan";
+"cards_scan_again" = "Scan Again";
+
+/* Exploit tab */
+"exploit_engine" = "Exploit Engine";
+"exploit_offset_placeholder" = "kernproc offset (hex)";
+"exploit_set" = "Set";
+"exploit_running" = "Running...";
+"exploit_run_darksword" = "Run DarkSword";
+"exploit_escape_sandbox" = "Escape Sandbox";
+"exploit_run_all" = "Run All";
+"exploit_complete" = "Exploit complete — sandbox escaped";
+"exploit_copy_logs" = "Copy Logs";
+"exploit_no_logs" = "No logs yet.";
+"exploit_resolve_offsets" = "Resolve Offsets";
+"exploit_resolving" = "Resolving...";
+"exploit_clear_cache" = "Clear Kernel Cache";
+
+/* Status messages */
+"status_checking" = "Checking environment...";
+"status_ready" = "Ready";
+"status_darksword_running" = "Darksword is running...";
+"status_resolving_offsets" = "Resolving kernel offsets...";
+"status_no_cards_path" = "Cards path not detected yet. Scan will try multiple locations.";
+"status_missing_offset" = "Missing kernproc offset. Resolving automatically...";
+"status_run_darksword" = "Run Darksword first.";
+"status_escape_sandbox" = "Escape sandbox to unlock file access.";
+"status_not_ready" = "Exploit context is not ready.";
+"status_no_wallet_path" = "Wallet cards path not found in known locations.";
+"status_write_available" = "Direct write access is available.";
+"status_no_write_import_offset" = "No write access. Resolving offsets, then run exploit.";
+"status_no_write_run_exploit" = "No write access. Run Darksword + Escape Sandbox.";
+"status_no_write_escape" = "No write access. Escape sandbox first.";
+"status_no_write_retry" = "No write access despite sandbox escape. Try again.";
+
+/* CardView */
+"card_rename" = "Rename";
+"card_restore" = "Restore";
+"card_save" = "Save";
+"card_error" = "Error";
+"card_ok" = "OK";
+"card_saved" = "Saved";
+"card_saved_message" = "Card image saved to Documents folder. You can access it in the Files app.";
+"card_rename_title" = "Rename Card";
+"card_nickname_placeholder" = "Nickname";
+"card_rename_save" = "Save";
+"card_clear_name" = "Clear Name";
+"card_cancel" = "Cancel";
+"card_rename_message" = "Give this card a name to identify it easily.";
+
+/* My Cards tab */
+"mycards_title" = "My Cards";
+"mycards_subtitle" = "Save backups of your current Apple Pay card art.";
+"mycards_backup_all" = "Backup All Current Cards";
+"mycards_no_device_cards" = "No device cards detected. Run the exploit and scan first.";
+"mycards_empty" = "No saved cards yet";
+"mycards_empty_hint" = "Backup your current cards to keep them safe before customizing.";
+"mycards_delete_title" = "Delete Card";
+"mycards_delete" = "Delete";
+"mycards_delete_confirm" = "Remove this saved card backup?";
+"mycards_apply" = "Apply";
+
+/* Community tab */
+"community_title" = "Community Cards";
+"community_subtitle" = "Download card backgrounds and apply them from your photo library.";
+"community_search" = "Search cards...";
+"community_attribution" = "Card images from the community at";
+"community_tap_retry" = "Tap to retry";
+"community_download" = "Download";

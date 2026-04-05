@@ -1,0 +1,87 @@
+/* CardioDS — Español */
+
+/* Tab titles */
+"tab_cards" = "Tarjetas";
+"tab_mycards" = "Mis Tarjetas";
+"tab_community" = "Comunidad";
+"tab_exploit" = "Exploit";
+
+/* Cards tab */
+"cards_tap_to_customize" = "Toca una tarjeta para personalizarla";
+"cards_swipe_hint" = "Desliza para ver otras tarjetas";
+"cards_refresh" = "Actualizar Tarjetas";
+"cards_none_found" = "No se encontraron tarjetas";
+"cards_none_found_alert" = "No se encontraron tarjetas";
+"cards_path_label" = "Ruta: %@";
+"cards_last_root" = "Última ruta de tarjetas detectada: %@";
+"cards_run_exploit_hint" = "Ve a la pestaña Exploit y pulsa Ejecutar Todo primero.";
+"cards_open_wallet" = "Abrir Wallet";
+"cards_run_all_scan" = "Ejecutar Todo + Escanear";
+"cards_scan_again" = "Escanear de Nuevo";
+
+/* Exploit tab */
+"exploit_engine" = "Motor de Exploit";
+"exploit_offset_placeholder" = "offset kernproc (hex)";
+"exploit_set" = "Establecer";
+"exploit_running" = "Ejecutando...";
+"exploit_run_darksword" = "Ejecutar DarkSword";
+"exploit_escape_sandbox" = "Escapar Sandbox";
+"exploit_run_all" = "Ejecutar Todo";
+"exploit_complete" = "Exploit completado — sandbox escapado";
+"exploit_copy_logs" = "Copiar Registros";
+"exploit_no_logs" = "Sin registros todavía.";
+"exploit_resolve_offsets" = "Resolver Offsets";
+"exploit_resolving" = "Resolviendo...";
+"exploit_clear_cache" = "Borrar Caché del Kernel";
+
+/* Status messages */
+"status_checking" = "Comprobando entorno...";
+"status_ready" = "Listo";
+"status_darksword_running" = "Darksword en ejecución...";
+"status_resolving_offsets" = "Resolviendo offsets del kernel...";
+"status_no_cards_path" = "Ruta de tarjetas no detectada. Se probarán múltiples ubicaciones.";
+"status_missing_offset" = "Falta offset kernproc. Resolviendo automáticamente...";
+"status_run_darksword" = "Ejecuta Darksword primero.";
+"status_escape_sandbox" = "Escapa del sandbox para desbloquear acceso a archivos.";
+"status_not_ready" = "El contexto del exploit no está listo.";
+"status_no_wallet_path" = "Ruta de tarjetas de Wallet no encontrada.";
+"status_write_available" = "Acceso de escritura directo disponible.";
+"status_no_write_import_offset" = "Sin acceso de escritura. Resolviendo offsets, luego ejecuta el exploit.";
+"status_no_write_run_exploit" = "Sin acceso de escritura. Ejecuta Darksword + Escapar Sandbox.";
+"status_no_write_escape" = "Sin acceso de escritura. Escapa del sandbox primero.";
+"status_no_write_retry" = "Sin acceso de escritura pese al sandbox escapado. Intenta de nuevo.";
+
+/* CardView */
+"card_rename" = "Renombrar";
+"card_restore" = "Restaurar";
+"card_save" = "Guardar";
+"card_error" = "Error";
+"card_ok" = "OK";
+"card_saved" = "Guardado";
+"card_saved_message" = "Imagen de tarjeta guardada en Documentos. Puedes acceder desde la app Archivos.";
+"card_rename_title" = "Renombrar Tarjeta";
+"card_nickname_placeholder" = "Apodo";
+"card_rename_save" = "Guardar";
+"card_clear_name" = "Borrar Nombre";
+"card_cancel" = "Cancelar";
+"card_rename_message" = "Dale un nombre a esta tarjeta para identificarla fácilmente.";
+
+/* My Cards tab */
+"mycards_title" = "Mis Tarjetas";
+"mycards_subtitle" = "Guarda copias de seguridad del arte de tus tarjetas Apple Pay.";
+"mycards_backup_all" = "Respaldar Todas las Tarjetas";
+"mycards_no_device_cards" = "No se detectaron tarjetas. Ejecuta el exploit y escanea primero.";
+"mycards_empty" = "Sin tarjetas guardadas";
+"mycards_empty_hint" = "Respalda tus tarjetas actuales antes de personalizarlas.";
+"mycards_delete_title" = "Eliminar Tarjeta";
+"mycards_delete" = "Eliminar";
+"mycards_delete_confirm" = "¿Eliminar esta copia de seguridad?";
+"mycards_apply" = "Aplicar";
+
+/* Community tab */
+"community_title" = "Tarjetas de la Comunidad";
+"community_subtitle" = "Descarga fondos de tarjetas y aplícalos desde tu biblioteca de fotos.";
+"community_search" = "Buscar tarjetas...";
+"community_attribution" = "Imágenes de tarjetas de la comunidad en";
+"community_tap_retry" = "Toca para reintentar";
+"community_download" = "Descarga";

@@ -1,0 +1,80 @@
+/* CardioDS — Français */
+
+"tab_cards" = "Cartes";
+"tab_mycards" = "Mes Cartes";
+"tab_community" = "Communauté";
+"tab_exploit" = "Exploit";
+
+"cards_tap_to_customize" = "Touchez une carte pour la personnaliser";
+"cards_swipe_hint" = "Balayez pour voir d'autres cartes";
+"cards_refresh" = "Actualiser";
+"cards_none_found" = "Aucune carte trouvée";
+"cards_none_found_alert" = "Aucune carte trouvée";
+"cards_path_label" = "Chemin : %@";
+"cards_last_root" = "Dernier chemin détecté : %@";
+"cards_run_exploit_hint" = "Allez dans l'onglet Exploit et appuyez sur Tout lancer.";
+"cards_open_wallet" = "Ouvrir Wallet";
+"cards_run_all_scan" = "Tout lancer + Scanner";
+"cards_scan_again" = "Rescanner";
+
+"exploit_engine" = "Moteur d'Exploit";
+"exploit_offset_placeholder" = "offset kernproc (hex)";
+"exploit_set" = "Définir";
+"exploit_running" = "En cours...";
+"exploit_run_darksword" = "Lancer DarkSword";
+"exploit_escape_sandbox" = "Échapper le Sandbox";
+"exploit_run_all" = "Tout lancer";
+"exploit_complete" = "Exploit terminé — sandbox échappé";
+"exploit_copy_logs" = "Copier les logs";
+"exploit_no_logs" = "Aucun log pour l'instant.";
+"exploit_resolve_offsets" = "Résoudre les Offsets";
+"exploit_resolving" = "Résolution...";
+"exploit_clear_cache" = "Effacer Cache Kernel";
+
+"status_checking" = "Vérification de l'environnement...";
+"status_ready" = "Prêt";
+"status_darksword_running" = "Darksword en cours d'exécution...";
+"status_resolving_offsets" = "Résolution des offsets kernel...";
+"status_no_cards_path" = "Chemin des cartes non détecté.";
+"status_missing_offset" = "Offset kernproc manquant. Résolution automatique...";
+"status_run_darksword" = "Lancez Darksword d'abord.";
+"status_escape_sandbox" = "Échappez le sandbox pour débloquer l'accès.";
+"status_not_ready" = "Le contexte d'exploit n'est pas prêt.";
+"status_no_wallet_path" = "Chemin Wallet introuvable.";
+"status_write_available" = "Accès en écriture direct disponible.";
+"status_no_write_import_offset" = "Pas d'accès en écriture. Résolution des offsets en cours.";
+"status_no_write_run_exploit" = "Pas d'accès en écriture. Lancez Darksword + Échapper Sandbox.";
+"status_no_write_escape" = "Pas d'accès en écriture. Échappez le sandbox d'abord.";
+"status_no_write_retry" = "Pas d'accès malgré l'échappement. Réessayez.";
+
+"card_rename" = "Renommer";
+"card_restore" = "Restaurer";
+"card_save" = "Enregistrer";
+"card_error" = "Erreur";
+"card_ok" = "OK";
+"card_saved" = "Enregistré";
+"card_saved_message" = "Image de carte enregistrée dans Documents.";
+"card_rename_title" = "Renommer la carte";
+"card_nickname_placeholder" = "Surnom";
+"card_rename_save" = "Enregistrer";
+"card_clear_name" = "Effacer le nom";
+"card_cancel" = "Annuler";
+"card_rename_message" = "Donnez un nom à cette carte pour l'identifier facilement.";
+
+"mycards_title" = "Mes Cartes";
+"mycards_subtitle" = "Sauvegardez vos images de cartes Apple Pay.";
+"mycards_backup_all" = "Sauvegarder toutes les cartes";
+"mycards_no_device_cards" = "Aucune carte détectée. Lancez l'exploit d'abord.";
+"mycards_empty" = "Aucune carte sauvegardée";
+"mycards_empty_hint" = "Sauvegardez vos cartes actuelles avant de les personnaliser.";
+"mycards_delete_title" = "Supprimer la carte";
+"mycards_delete" = "Supprimer";
+"mycards_delete_confirm" = "Supprimer cette sauvegarde ?";
+"mycards_apply" = "Appliquer";
+
+"community_title" = "Cartes de la Communauté";
+"community_subtitle" = "Téléchargez des fonds de cartes et appliquez-les.";
+"community_search" = "Rechercher des cartes...";
+"community_attribution" = "Images de cartes de la communauté sur";
+"community_tap_retry" = "Touchez pour réessayer";
+"community_download" = "Télécharger";

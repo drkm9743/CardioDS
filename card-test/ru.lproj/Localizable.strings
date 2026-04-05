@@ -1,0 +1,80 @@
+/* CardioDS — Русский */
+
+"tab_cards" = "Карты";
+"tab_mycards" = "Мои Карты";
+"tab_community" = "Сообщество";
+"tab_exploit" = "Эксплойт";
+
+"cards_tap_to_customize" = "Нажмите на карту для настройки";
+"cards_swipe_hint" = "Свайпните для просмотра других карт";
+"cards_refresh" = "Обновить карты";
+"cards_none_found" = "Карты не найдены";
+"cards_none_found_alert" = "Карты не найдены";
+"cards_path_label" = "Путь: %@";
+"cards_last_root" = "Последний найденный путь: %@";
+"cards_run_exploit_hint" = "Перейдите на вкладку Эксплойт и нажмите Запустить всё.";
+"cards_open_wallet" = "Открыть Wallet";
+"cards_run_all_scan" = "Запустить всё + Сканировать";
+"cards_scan_again" = "Сканировать снова";
+
+"exploit_engine" = "Движок эксплойта";
+"exploit_offset_placeholder" = "смещение kernproc (hex)";
+"exploit_set" = "Установить";
+"exploit_running" = "Выполняется...";
+"exploit_run_darksword" = "Запустить DarkSword";
+"exploit_escape_sandbox" = "Выйти из Sandbox";
+"exploit_run_all" = "Запустить всё";
+"exploit_complete" = "Эксплойт завершён — sandbox пройден";
+"exploit_copy_logs" = "Копировать логи";
+"exploit_no_logs" = "Логов пока нет.";
+"exploit_resolve_offsets" = "Определить смещения";
+"exploit_resolving" = "Определение...";
+"exploit_clear_cache" = "Очистить кэш ядра";
+
+"status_checking" = "Проверка окружения...";
+"status_ready" = "Готово";
+"status_darksword_running" = "Darksword выполняется...";
+"status_resolving_offsets" = "Определение смещений ядра...";
+"status_no_cards_path" = "Путь к картам не обнаружен.";
+"status_missing_offset" = "Отсутствует смещение kernproc. Автоматическое определение...";
+"status_run_darksword" = "Сначала запустите Darksword.";
+"status_escape_sandbox" = "Выйдите из sandbox для доступа к файлам.";
+"status_not_ready" = "Контекст эксплойта не готов.";
+"status_no_wallet_path" = "Путь к картам Wallet не найден.";
+"status_write_available" = "Прямой доступ на запись доступен.";
+"status_no_write_import_offset" = "Нет доступа на запись. Определение смещений.";
+"status_no_write_run_exploit" = "Нет доступа на запись. Запустите Darksword + Sandbox.";
+"status_no_write_escape" = "Нет доступа на запись. Сначала выйдите из sandbox.";
+"status_no_write_retry" = "Нет доступа несмотря на обход sandbox. Попробуйте снова.";
+
+"card_rename" = "Переименовать";
+"card_restore" = "Восстановить";
+"card_save" = "Сохранить";
+"card_error" = "Ошибка";
+"card_ok" = "ОК";
+"card_saved" = "Сохранено";
+"card_saved_message" = "Изображение карты сохранено в Документы.";
+"card_rename_title" = "Переименовать карту";
+"card_nickname_placeholder" = "Имя";
+"card_rename_save" = "Сохранить";
+"card_clear_name" = "Очистить имя";
+"card_cancel" = "Отмена";
+"card_rename_message" = "Дайте этой карте имя для удобной идентификации.";
+
+"mycards_title" = "Мои Карты";
+"mycards_subtitle" = "Сохраняйте резервные копии карт Apple Pay.";
+"mycards_backup_all" = "Резервировать все карты";
+"mycards_no_device_cards" = "Карты не обнаружены. Сначала запустите эксплойт.";
+"mycards_empty" = "Нет сохранённых карт";
+"mycards_empty_hint" = "Сделайте резервную копию перед настройкой.";
+"mycards_delete_title" = "Удалить карту";
+"mycards_delete" = "Удалить";
+"mycards_delete_confirm" = "Удалить эту резервную копию?";
+"mycards_apply" = "Применить";
+
+"community_title" = "Карты сообщества";
+"community_subtitle" = "Скачивайте фоны карт и применяйте из библиотеки фото.";
+"community_search" = "Поиск карт...";
+"community_attribution" = "Изображения карт от сообщества на";
+"community_tap_retry" = "Нажмите для повтора";
+"community_download" = "Скачать";

@@ -1,60 +1,103 @@
-# Cardio
+# CardioDS
 
-![87](https://user-images.githubusercontent.com/29115431/193304861-3eb9f323-8d9e-46d9-a539-26565a655832.png)
+> Customize your Apple Pay card artwork on iOS 18 — with auto kernel offset resolution.
 
-App for changing Apple Pay images using an integrated DarkSword + KFS workflow.
-Current testing baseline: iOS 18.6.2.
+**Version 1.0** · iOS 18.0+ · Swift 5 · Xcode 14
 
-Legacy app for changing Apple Pay card artwork. Originally based on the old
-CoreTrust/TrollStore era, now adapted for modern exploit-driven workflows.
+---
 
-## Darksword/lara integration status (this branch)
+## Features
 
-- Cardio now checks at launch whether `/var/mobile/Library/Passes/Cards` is
-	writable.
-- Cardio now includes darksword + KFS modules directly in-app.
-- You can run exploit and KFS from Cardio's own UI (`Run Darksword`, `Init KFS`,
-	`Run All`) without launching lara separately.
+- **Apple Pay card customization** — Replace card background images directly from your photo library
+- **Auto kernproc offset resolution** — Downloads your device's kernelcache and resolves kernel offsets via XPF (XNU PatchFinder), no manual hex input needed
+- **Integrated exploit engine** — DarkSword + sandbox escape + KFS, all built-in
+- **Card management** — Backup, restore, rename cards with nicknames
+- **Community cards** — Browse and download card designs from a built-in catalog
+- **8-language localization** — English, Spanish, French, Italian, German, Russian, Chinese (Simplified), Japanese
 
-## Permanence model
+## How It Works
 
-- App install permanence depends on your install/signing path, not on darksword.
-- Card artwork replacement is persistent on disk after it is written.
-- Darksword kernel privileges are session-based; after reboot, run Cardio's
-	`Run All` again before making new writes.
+1. On first launch, CardioDS downloads the correct kernelcache for your device model and iOS version using `libgrabkernel2`
+2. XPF (XNU PatchFinder) parses the kernelcache Mach-O to resolve `kernproc`, `rootvnode`, and process struct size
+3. Offsets are cached in UserDefaults — no re-download needed unless you update iOS
+4. The exploit engine uses the resolved offsets to gain kernel read/write access
+5. Card artwork is written directly to `/var/mobile/Library/Passes/Cards`
 
-## iOS 18.6.2 revival notes
+## Setup
 
-This codebase was originally built for the old CoreTrust/TrollStore era. The
-updates in this workspace aim to make the app logic itself usable again on
-modern systems, but with an important caveat:
+### 1. Clone
 
-- You still need a method that grants write access to
-	`/var/mobile/Library/Passes/Cards` (for example, a jailbreak or an exploit
-	flow that enables kernel-backed file writes).
+```bash
+git clone https://github.com/cisc0disco/CardioDS.git
+cd CardioDS
+```
 
-What was updated:
+### 2. Download XPF + libgrabkernel2 dylibs
 
-- Removed the external carousel dependency in favor of native `TabView` paging.
-- Fixed image path handling so previews and writes use real file paths.
-- Fixed PDF replacement flow (it previously wrote to an empty path).
-- Added daemon refresh flow (`passd`, `walletd`, `PassbookUIService`) before
-	SpringBoard restart fallback.
+```bash
+chmod +x setup_xpf.sh
+./setup_xpf.sh
+```
 
-What this does not include:
+This downloads `libxpf.dylib` and `libgrabkernel2.dylib` from Lara's repository into `card-test/lib/`.
 
-- Automatic sandbox escape by itself.
+### 3. Xcode setup
 
-## Recommended workflow (all-in-one in Cardio)
+1. Open `Cardio.xcodeproj` in Xcode
+2. Drag `card-test/lib/` into the Xcode navigator
+3. Select the **Cardio** target → **General** → **Frameworks, Libraries, and Embedded Content**
+4. Add both `libxpf.dylib` and `libgrabkernel2.dylib` → set **Embed & Sign**
+5. In **Build Settings**:
+   - **Library Search Paths**: add `$(SRCROOT)/card-test/lib`
+   - **Header Search Paths**: add `$(SRCROOT)/card-test/kexploit`
+6. Build and install via your preferred signing method
 
-1. Open Cardio and press `Run All`.
-2. Wait until exploit/KFS state shows ready.
-3. Ensure your environment grants write access to
-	`/var/mobile/Library/Passes/Cards`.
-4. Pick a card, set an image, and let the app refresh Wallet services.
-5. If changes do not appear immediately, re-open Wallet after the UI restart.
+## Usage
 
-## Credits:
-cisc0disco (https://github.com/cisc0disco/Cardio)
-opa334 (https://github.com/opa334/darksword-kexploit)
-rooootdev (https://github.com/rooootdev/lara)
+1. Open CardioDS
+2. The app auto-resolves kernel offsets on first run (or tap **Resolve Offsets** in the Exploit tab)
+3. Tap **Run All** to run DarkSword + sandbox escape
+4. Go to the **Cards** tab, tap a card, and pick a replacement image from your photo library
+5. Changes persist on disk; after reboot, run **Run All** again
+
+## Architecture
+
+```
+card-test/
+├── ContentView.swift          # Main tab view (Cards, My Cards, Community, Exploit)
+├── CardView.swift             # Individual card display + replacement
+├── MyCardsView.swift          # Card backup/restore management
+├── CommunityView.swift        # Community card catalog browser
+├── ExploitManager.swift       # Exploit state machine + XPF integration
+├── card_testApp.swift         # App entry point + offset init
+├── ImagePicker.swift          # Photo library picker
+├── ObjcHelper.h/m             # ObjC bridge (KFS, daemon refresh)
+├── kexploit/
+│   ├── darksword.h/m          # DarkSword kernel exploit
+│   ├── kfs.h/m                # Kernel file system read
+│   ├── utils.h/m              # Kernel utilities (proc walking, task resolution)
+│   ├── sandbox_escape.h/m     # Sandbox escape
+│   ├── offsets.h/m            # XPF-based auto offset resolution
+│   ├── xpf_minimal.h          # Minimal XPF struct declarations
+│   └── libgrabkernel2.h       # Kernelcache download API
+├── en.lproj/Localizable.strings
+├── es.lproj/Localizable.strings
+├── fr.lproj/Localizable.strings
+├── it.lproj/Localizable.strings
+├── de.lproj/Localizable.strings
+├── ru.lproj/Localizable.strings
+├── zh-Hans.lproj/Localizable.strings
+└── ja.lproj/Localizable.strings
+```
+
+## Credits
+
+- [cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
+- [opa334](https://github.com/opa334/darksword-kexploit) — DarkSword kernel exploit
+- [rooootdev](https://github.com/rooootdev/lara) — Lara, XPF integration, libgrabkernel2
+- [AlfieCG](https://github.com/alfiecg24) — libgrabkernel2 (kernelcache downloader)
+- [AppInstallerIOS](https://github.com/AppInstalleriOS) — Community card images
+
+## License
+
+This project is provided for educational and research purposes only.

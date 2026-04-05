@@ -302,11 +302,11 @@ struct ContentView: View {
             Color.black.ignoresSafeArea()
 
             VStack(spacing: 12) {
-                Text("Tap a card to customize")
+                Text("cards_tap_to_customize")
                     .font(.system(size: 25))
                     .foregroundColor(.white)
 
-                Text("Swipe to view different cards")
+                Text("cards_swipe_hint")
                     .font(.system(size: 15))
                     .foregroundColor(.white)
 
@@ -327,7 +327,7 @@ struct ContentView: View {
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                     .frame(height: 340)
 
-                    Button("Refresh Cards") {
+                    Button("cards_refresh") {
                         loadCards()
                         if cards.isEmpty {
                             showNoCardsError = true
@@ -343,16 +343,16 @@ struct ContentView: View {
                             .font(.system(size: 40))
                             .foregroundColor(.gray)
 
-                        Text("No Cards Found")
+                        Text("cards_none_found")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.red)
 
-                        Text("Path: \(detectedCardsRoot)")
+                        Text(String(format: NSLocalizedString("cards_path_label", comment: ""), detectedCardsRoot))
                             .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(.white.opacity(0.75))
 
                         if !exploit.darkswordReady {
-                            Text("Go to the Exploit tab and tap Run All first.")
+                            Text("cards_run_exploit_hint")
                                 .font(.system(size: 13))
                                 .foregroundColor(.orange)
                                 .multilineTextAlignment(.center)
@@ -360,20 +360,20 @@ struct ContentView: View {
                         }
 
                         HStack(spacing: 12) {
-                            Button("Open Wallet") {
+                            Button("cards_open_wallet") {
                                 openWalletApp()
                             }
                             .foregroundColor(.cyan)
 
                             if !exploit.darkswordReady {
-                                Button("Run All + Scan") {
+                                Button("cards_run_all_scan") {
                                     runAllAndReload()
                                 }
                                 .foregroundColor(.white)
                             }
                         }
 
-                        Button("Scan Again") {
+                        Button("cards_scan_again") {
                             loadCards()
                             if cards.isEmpty {
                                 showNoCardsError = true
@@ -387,8 +387,8 @@ struct ContentView: View {
             }
             .alert(isPresented: $showNoCardsError) {
                 Alert(
-                    title: Text("No Cards Were Found"),
-                    message: Text("Last detected cards root: \(detectedCardsRoot)")
+                    title: Text("cards_none_found_alert"),
+                    message: Text(String(format: NSLocalizedString("cards_last_root", comment: ""), detectedCardsRoot))
                 )
             }
         }
@@ -402,7 +402,7 @@ struct ContentView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Exploit Engine")
+                    Text("exploit_engine")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
 
@@ -441,10 +441,10 @@ struct ContentView: View {
                     .foregroundColor(.white.opacity(0.8))
 
                     HStack(spacing: 8) {
-                        TextField("kernproc offset (hex)", text: $offsetInput)
+                        TextField(NSLocalizedString("exploit_offset_placeholder", comment: ""), text: $offsetInput)
                             .textFieldStyle(.roundedBorder)
 
-                        Button("Set") {
+                        Button("exploit_set") {
                             if exploit.setKernprocOffset(from: offsetInput) {
                                 refreshOffsetInputFromState()
                                 recheckAndReload()
@@ -455,7 +455,7 @@ struct ContentView: View {
 
                     HStack(spacing: 10) {
                         if !exploit.darkswordReady {
-                            Button(exploit.darkswordRunning ? "Running..." : "Run DarkSword") {
+                            Button(exploit.darkswordRunning ? NSLocalizedString("exploit_running", comment: "") : NSLocalizedString("exploit_run_darksword", comment: "")) {
                                 exploit.runDarksword { _ in
                                     recheckAndReload()
                                 }
@@ -465,7 +465,7 @@ struct ContentView: View {
                         }
 
                         if exploit.darkswordReady && !exploit.sandboxEscaped {
-                            Button("Escape Sandbox") {
+                            Button("exploit_escape_sandbox") {
                                 exploit.escapeSandbox { _ in
                                     recheckAndReload()
                                 }
@@ -475,7 +475,7 @@ struct ContentView: View {
                         }
 
                         if !exploit.sandboxEscaped {
-                            Button("Run All") {
+                            Button("exploit_run_all") {
                                 runAllAndReload()
                             }
                             .disabled(exploit.darkswordRunning)
@@ -487,20 +487,20 @@ struct ContentView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                            Text("Exploit complete — sandbox escaped")
+                            Text("exploit_complete")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(.green)
                         }
                         .padding(.vertical, 4)
                     }
 
-                    Button("Copy Logs") {
+                    Button("exploit_copy_logs") {
                         UIPasteboard.general.string = buildLogExportText()
                         exploit.addLog("[scan] logs copied to clipboard")
                     }
                     .foregroundColor(.white)
 
-                    Text(exploit.logText.isEmpty ? "No logs yet." : exploit.logText)
+                    Text(exploit.logText.isEmpty ? NSLocalizedString("exploit_no_logs", comment: "") : exploit.logText)
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundColor(Color.green.opacity(0.9))
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -520,28 +520,28 @@ struct ContentView: View {
             cardsTab
                 .tabItem {
                     Image(systemName: "creditcard.fill")
-                    Text("Cards")
+                    Text("tab_cards")
                 }
                 .tag(0)
 
             MyCardsView(exploit: exploit, cards: cards)
                 .tabItem {
                     Image(systemName: "tray.full.fill")
-                    Text("My Cards")
+                    Text("tab_mycards")
                 }
                 .tag(1)
 
             CommunityView()
                 .tabItem {
                     Image(systemName: "globe")
-                    Text("Community")
+                    Text("tab_community")
                 }
                 .tag(2)
 
             exploitTab
                 .tabItem {
                     Image(systemName: "terminal.fill")
-                    Text("Exploit")
+                    Text("tab_exploit")
                 }
                 .tag(3)
         }
