@@ -297,6 +297,5 @@ struct CardView: View {
         } message: {
             Text("Card image saved to Documents folder. You can access it in the Files app.")
         }
-        }
     }
 }
