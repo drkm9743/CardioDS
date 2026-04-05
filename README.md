@@ -103,7 +103,4 @@ card-test/
 This project is licensed under the [MIT License](LICENSE).
 
 **Third-party components have their own licenses:**
-- XPF, ChOma (opa334) — MIT
-- libgrabkernel2 (AlfieCG) — MIT
 - Lara (rooootdev) — AGPL-3.0 (used only as reference; no AGPL code is copied)
-- DarkSword (htimesnine / opa334) — see upstream repos
