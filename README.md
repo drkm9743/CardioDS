@@ -2,9 +2,6 @@
 
 > Customize your Apple Pay card artwork on iOS (17.2.1 - 26.0.1).
 
-
----
-
 ## Features
 
 - **Apple Pay card customization** — Replace card background images directly from your photo library
@@ -94,11 +91,11 @@ card-test/
 
 ## Credits
 
-- [cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
-- [opa334](https://github.com/opa334/darksword-kexploit) — DarkSword kernel exploit
-- [rooootdev](https://github.com/rooootdev/lara) — Lara, XPF integration, libgrabkernel2
-- [AlfieCG](https://github.com/alfiecg24) — libgrabkernel2 (kernelcache downloader)
-- [AppInstallerIOS](https://github.com/AppInstalleriOS) — Community card images
+- [GitHub - cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
+- [GitHub - opa334](https://github.com/opa334/darksword-kexploit) — DarkSword kernel exploit
+- [GitHub - rooootdev](https://github.com/rooootdev/lara) — Lara, XPF integration, libgrabkernel2
+- [GitHub - AlfieCG](https://github.com/alfiecg24) — libgrabkernel2 (kernelcache downloader)
+- [Reddit r/CreditCards - chaoxu](https://dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh) — Community card images
 
 ## License
 
