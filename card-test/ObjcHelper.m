@@ -38,10 +38,7 @@ void killall(NSString* processName);
     killall(@"passd");
     killall(@"walletd");
     killall(@"PassbookUIService");
-
-    // Keep legacy behavior as a fallback to force UI refresh on all versions.
-    killall(@"SpringBoard");
-    exit(0);
+    // Daemons auto-relaunch. No need to kill SpringBoard or exit.
 }
 
 -(UIImage *)getImageFromData:(NSString *)path {

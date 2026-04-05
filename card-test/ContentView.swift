@@ -3,6 +3,7 @@ import UIKit
 
 struct ContentView: View {
     @StateObject private var exploit = ExploitManager.shared
+    @State private var selectedTab = 0
     @State private var showNoCardsError = false
     @State private var cards: [Card] = []
     @State private var detectedCardsRoot = "not-detected"
@@ -301,124 +302,9 @@ struct ContentView: View {
         exploit.addLog("Could not open Wallet app. Open it manually, then scan again.")
     }
 
-    private var exploitPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Exploit Engine")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
+    // MARK: - Cards Tab
 
-            Text(exploit.statusMessage)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(exploit.canApplyCardChanges ? .green : .orange)
-
-            Text(String(
-                format: "darksword=%@ | sandbox=%@ | kfs=%@",
-                exploit.darkswordReady ? "ready" : "not-ready",
-                exploit.sandboxEscaped ? "escaped" : "blocked",
-                exploit.kfsReady ? "ready" : "not-ready"
-            ))
-            .font(.system(size: 12, weight: .regular, design: .monospaced))
-            .foregroundColor(.white.opacity(0.85))
-
-            Text(exploit.hasKernprocOffset
-                 ? String(format: "kernproc_offset=0x%llx", exploit.kernprocOffset)
-                 : "kernproc_offset=missing")
-            .font(.system(size: 11, design: .monospaced))
-            .foregroundColor(exploit.hasKernprocOffset ? .green.opacity(0.9) : .orange)
-
-            Text("cards_root=\(detectedCardsRoot)")
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(.white.opacity(0.7))
-
-            Text("scan_mode=\(usedKfsForScan ? "kfs" : "direct")")
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(.white.opacity(0.7))
-
-            if exploit.darkswordReady {
-                Text(String(
-                    format: "kernel_base=0x%llx slide=0x%llx",
-                    exploit.kernelBase,
-                    exploit.kernelSlide
-                ))
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(.white.opacity(0.7))
-
-                Text(String(
-                    format: "our_proc=0x%llx our_task=0x%llx",
-                    exploit.ourProc,
-                    exploit.ourTask
-                ))
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(.white.opacity(0.7))
-            }
-
-            HStack(spacing: 8) {
-                TextField("kernproc offset (hex)", text: $offsetInput)
-                    .textFieldStyle(.roundedBorder)
-
-                Button("Set") {
-                    if exploit.setKernprocOffset(from: offsetInput) {
-                        refreshOffsetInputFromState()
-                        recheckAndReload()
-                    }
-                }
-                .foregroundColor(.white)
-
-
-            }
-
-            HStack(spacing: 10) {
-                Button(exploit.darkswordRunning ? "Running DarkSword..." : "Run DarkSword") {
-                    exploit.runDarksword { _ in
-                        recheckAndReload()
-                    }
-                }
-                .disabled(exploit.darkswordRunning || exploit.kfsRunning)
-                .foregroundColor(.white)
-
-                Button(exploit.kfsRunning ? "Init KFS..." : "Init KFS") {
-                    exploit.initKFS { _ in
-                        recheckAndReload()
-                    }
-                }
-                .disabled(exploit.darkswordRunning || exploit.kfsRunning)
-                .foregroundColor(.white)
-
-                Button("Run All") {
-                    runAllAndReload()
-                }
-                .disabled(exploit.darkswordRunning || exploit.kfsRunning)
-                .foregroundColor(.white)
-            }
-
-            HStack(spacing: 10) {
-                Button("Copy Logs") {
-                    UIPasteboard.general.string = buildLogExportText()
-                    scanLog("logs copied to clipboard")
-                }
-                .foregroundColor(.white)
-
-
-            }
-
-            ScrollView {
-                Text(exploit.logText.isEmpty ? "No logs yet." : exploit.logText)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundColor(Color.green.opacity(0.9))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(8)
-            }
-            .frame(height: 120)
-            .background(Color.white.opacity(0.06))
-            .cornerRadius(8)
-        }
-        .padding(12)
-        .background(Color.white.opacity(0.09))
-        .cornerRadius(12)
-        .padding(.horizontal, 14)
-    }
-
-    var body: some View {
+    private var cardsTab: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
@@ -431,7 +317,13 @@ struct ContentView: View {
                     .font(.system(size: 15))
                     .foregroundColor(.white)
 
-                exploitPanel
+                if !exploit.canApplyCardChanges {
+                    Text(exploit.statusMessage)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 20)
+                        .multilineTextAlignment(.center)
+                }
 
                 if !cards.isEmpty {
                     TabView {
@@ -451,18 +343,28 @@ struct ContentView: View {
                     .foregroundColor(.white)
                     .padding(.top, 16)
                 } else {
+                    Spacer()
+
                     VStack(spacing: 12) {
-                        Text("No Cards Found").foregroundColor(.red)
+                        Image(systemName: "creditcard.trianglebadge.exclamationmark")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+
+                        Text("No Cards Found")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.red)
 
                         Text("Path: \(detectedCardsRoot)")
                             .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(.white.opacity(0.75))
 
-                        Text(usedKfsForScan ? "Directory scan via KFS (namecache)" : "Directory scan via direct filesystem")
-                            .font(.system(size: 11, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.75))
-
-                        if exploit.kfsReady {
+                        if !exploit.darkswordReady {
+                            Text("Go to the Exploit tab and tap Run All first.")
+                                .font(.system(size: 13))
+                                .foregroundColor(.orange)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
+                        } else if exploit.kfsReady {
                             Text("KFS namecache may be cold. Open Wallet first to warm it, then scan again.")
                                 .font(.system(size: 12))
                                 .foregroundColor(.orange)
@@ -476,10 +378,12 @@ struct ContentView: View {
                             }
                             .foregroundColor(.cyan)
 
-                            Button("Run All + Scan") {
-                                runAllAndReload()
+                            if !exploit.darkswordReady {
+                                Button("Run All + Scan") {
+                                    runAllAndReload()
+                                }
+                                .foregroundColor(.white)
                             }
-                            .foregroundColor(.white)
                         }
 
                         Button("Scan Again") {
@@ -490,6 +394,8 @@ struct ContentView: View {
                         }
                         .foregroundColor(.white)
                     }
+
+                    Spacer()
                 }
             }
             .alert(isPresented: $showNoCardsError) {
@@ -499,11 +405,142 @@ struct ContentView: View {
                 )
             }
         }
+    }
+
+    // MARK: - Exploit Tab
+
+    private var exploitTab: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Exploit Engine")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text(exploit.statusMessage)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(exploit.canApplyCardChanges ? .green : .orange)
+
+                    Group {
+                        Text(String(
+                            format: "darksword=%@ | sandbox=%@ | kfs=%@",
+                            exploit.darkswordReady ? "ready" : "not-ready",
+                            exploit.sandboxEscaped ? "escaped" : "blocked",
+                            exploit.kfsReady ? "ready" : "not-ready"
+                        ))
+
+                        Text(exploit.hasKernprocOffset
+                             ? String(format: "kernproc_offset=0x%llx", exploit.kernprocOffset)
+                             : "kernproc_offset=missing")
+                        .foregroundColor(exploit.hasKernprocOffset ? .green.opacity(0.9) : .orange)
+
+                        Text("cards_root=\(detectedCardsRoot)")
+                        Text("scan_mode=\(usedKfsForScan ? "kfs" : "direct")")
+
+                        if exploit.darkswordReady {
+                            Text(String(
+                                format: "kernel_base=0x%llx slide=0x%llx",
+                                exploit.kernelBase,
+                                exploit.kernelSlide
+                            ))
+                            Text(String(
+                                format: "our_proc=0x%llx our_task=0x%llx",
+                                exploit.ourProc,
+                                exploit.ourTask
+                            ))
+                        }
+                    }
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.8))
+
+                    HStack(spacing: 8) {
+                        TextField("kernproc offset (hex)", text: $offsetInput)
+                            .textFieldStyle(.roundedBorder)
+
+                        Button("Set") {
+                            if exploit.setKernprocOffset(from: offsetInput) {
+                                refreshOffsetInputFromState()
+                                recheckAndReload()
+                            }
+                        }
+                        .foregroundColor(.white)
+                    }
+
+                    HStack(spacing: 10) {
+                        Button(exploit.darkswordRunning ? "Running..." : "Run DarkSword") {
+                            exploit.runDarksword { _ in
+                                recheckAndReload()
+                            }
+                        }
+                        .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                        .foregroundColor(.white)
+
+                        Button(exploit.kfsRunning ? "Init KFS..." : "Init KFS") {
+                            exploit.initKFS { _ in
+                                recheckAndReload()
+                            }
+                        }
+                        .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                        .foregroundColor(.white)
+
+                        Button("Run All") {
+                            runAllAndReload()
+                        }
+                        .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                        .foregroundColor(.white)
+                    }
+
+                    Button("Copy Logs") {
+                        UIPasteboard.general.string = buildLogExportText()
+                        exploit.addLog("[scan] logs copied to clipboard")
+                    }
+                    .foregroundColor(.white)
+
+                    Text(exploit.logText.isEmpty ? "No logs yet." : exploit.logText)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(Color.green.opacity(0.9))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(8)
+                        .background(Color.white.opacity(0.06))
+                        .cornerRadius(8)
+                }
+                .padding(14)
+            }
+        }
+    }
+
+    // MARK: - Body
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            cardsTab
+                .tabItem {
+                    Image(systemName: "creditcard.fill")
+                    Text("Cards")
+                }
+                .tag(0)
+
+            exploitTab
+                .tabItem {
+                    Image(systemName: "terminal.fill")
+                    Text("Exploit")
+                }
+                .tag(1)
+        }
+        .accentColor(.white)
         .onAppear {
+            // Dark tab bar
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(white: 0.08, alpha: 1)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+
             recheckAndReload()
             refreshOffsetInputFromState()
         }
-
     }
 }
 
