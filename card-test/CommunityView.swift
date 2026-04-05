@@ -289,37 +289,107 @@ struct CommunityView: View {
     }
 }
 
+// MARK: - Image Loader (replaces AsyncImage for reliability)
+
+@MainActor
+final class RemoteImageLoader: ObservableObject {
+    @Published var image: UIImage?
+    @Published var failed = false
+    @Published var loading = false
+
+    private var url: URL?
+    private var retryCount = 0
+    private static let maxRetries = 2
+
+    func load(from urlString: String) {
+        guard let url = URL(string: urlString) else {
+            failed = true
+            return
+        }
+        self.url = url
+        retryCount = 0
+        fetchImage()
+    }
+
+    func retry() {
+        failed = false
+        retryCount = 0
+        fetchImage()
+    }
+
+    private func fetchImage() {
+        guard let url else { return }
+        loading = true
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 15
+        request.cachePolicy = .returnCacheDataElseLoad
+
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.loading = false
+
+                if let data, error == nil,
+                   let httpResp = response as? HTTPURLResponse,
+                   httpResp.statusCode == 200,
+                   let img = UIImage(data: data) {
+                    self.image = img
+                } else if self.retryCount < Self.maxRetries {
+                    self.retryCount += 1
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(self.retryCount) * 0.5) {
+                        self.fetchImage()
+                    }
+                } else {
+                    self.failed = true
+                }
+            }
+        }.resume()
+    }
+}
+
 // MARK: - Card Cell
 
 struct CommunityCardCell: View {
     let card: CommunityCard
     @ObservedObject var vm: CommunityViewModel
+    @StateObject private var loader = RemoteImageLoader()
 
     var body: some View {
         VStack(spacing: 6) {
-            AsyncImage(url: URL(string: card.imageURL)) { phase in
-                switch phase {
-                case .success(let image):
-                    image
+            Group {
+                if let image = loader.image {
+                    Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 200, height: 126)
                         .clipped()
                         .cornerRadius(10)
-                case .failure:
+                } else if loader.failed {
                     placeholder
                         .overlay(
-                            Image(systemName: "exclamationmark.triangle")
-                                .foregroundColor(.orange)
+                            VStack(spacing: 4) {
+                                Image(systemName: "arrow.clockwise")
+                                    .foregroundColor(.orange)
+                                Text("Tap to retry")
+                                    .font(.system(size: 9))
+                                    .foregroundColor(.orange)
+                            }
                         )
-                case .empty:
+                        .onTapGesture {
+                            loader.retry()
+                        }
+                } else {
                     placeholder
                         .overlay(ProgressView().tint(.white))
-                @unknown default:
-                    placeholder
                 }
             }
             .frame(width: 200, height: 126)
+            .onAppear {
+                if loader.image == nil && !loader.loading {
+                    loader.load(from: card.imageURL)
+                }
+            }
 
             Text(card.name)
                 .font(.system(size: 12, weight: .medium))

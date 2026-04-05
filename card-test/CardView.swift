@@ -10,6 +10,36 @@ struct Card: Identifiable {
     var id: String {
         directoryPath
     }
+
+    var displayName: String {
+        CardNicknameManager.shared.nickname(for: directoryPath) ?? bundleName
+    }
+}
+
+// MARK: - Nickname Manager
+
+final class CardNicknameManager {
+    static let shared = CardNicknameManager()
+    private let key = "cardio.card.nicknames"
+
+    private var cache: [String: String]
+
+    private init() {
+        cache = (UserDefaults.standard.dictionary(forKey: key) as? [String: String]) ?? [:]
+    }
+
+    func nickname(for directoryPath: String) -> String? {
+        cache[directoryPath]
+    }
+
+    func setNickname(_ name: String?, for directoryPath: String) {
+        if let name, !name.trimmingCharacters(in: .whitespaces).isEmpty {
+            cache[directoryPath] = name.trimmingCharacters(in: .whitespaces)
+        } else {
+            cache.removeValue(forKey: directoryPath)
+        }
+        UserDefaults.standard.set(cache, forKey: key)
+    }
 }
 
 private let helper = ObjcHelper()
@@ -25,6 +55,8 @@ struct CardView: View {
     @State private var errorMessage = ""
     @State private var imageVersion = 0          // bump to force re-render
     @State private var showSaved = false
+    @State private var showNicknameEditor = false
+    @State private var nicknameInput = ""
 
     private var cardDirectoryPath: String {
         return card.directoryPath
@@ -76,7 +108,7 @@ struct CardView: View {
             }
         }
 
-        // Direct access failed (sandbox) — try reading via KFS kernel read
+        // Direct access failed (sandbox) — try reading via kernel read
         if let data = helper.kfsReadFile(card.imagePath, maxSize: 8 * 1024 * 1024) {
             if lower.hasSuffix(".pdf") {
                 if let doc = PDFDocument(data: data),
@@ -260,13 +292,28 @@ struct CardView: View {
                 setImage(image: newImage)
             }
 
-            Text(card.bundleName)
+            Text(card.displayName)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.white.opacity(0.8))
                 .lineLimit(1)
 
+            if card.displayName != card.bundleName {
+                Text(card.bundleName)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.35))
+                    .lineLimit(1)
+            }
+
             // Action buttons
             HStack(spacing: 16) {
+                Button {
+                    nicknameInput = CardNicknameManager.shared.nickname(for: card.directoryPath) ?? ""
+                    showNicknameEditor = true
+                } label: {
+                    Label("Rename", systemImage: "pencil")
+                        .font(.system(size: 13))
+                }
+                .foregroundColor(.white.opacity(0.7))
                 if fm.fileExists(atPath: backupPath) || imageVersion > 0 {
                     Button {
                         resetImage()
@@ -296,6 +343,19 @@ struct CardView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("Card image saved to Documents folder. You can access it in the Files app.")
+        }
+        .alert("Rename Card", isPresented: $showNicknameEditor) {
+            TextField("Nickname", text: $nicknameInput)
+            Button("Save") {
+                CardNicknameManager.shared.setNickname(nicknameInput.isEmpty ? nil : nicknameInput, for: card.directoryPath)
+            }
+            Button("Clear Name", role: .destructive) {
+                CardNicknameManager.shared.setNickname(nil, for: card.directoryPath)
+                nicknameInput = ""
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Give this card a name to identify it easily.\nBundle: \(card.bundleName)")
         }
     }
 }

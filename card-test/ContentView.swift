@@ -7,7 +7,6 @@ struct ContentView: View {
     @State private var showNoCardsError = false
     @State private var cards: [Card] = []
     @State private var detectedCardsRoot = "not-detected"
-    @State private var usedKfsForScan = false
     @State private var offsetInput = ""
 
 
@@ -45,7 +44,7 @@ struct ContentView: View {
         return unique
     }
 
-    private func listDirectory(_ path: String, usedKfs: inout Bool) -> [String] {
+    private func listDirectory(_ path: String) -> [String] {
         let fm = FileManager.default
 
         for variant in pathVariants(for: path) {
@@ -65,18 +64,17 @@ struct ContentView: View {
         }
 
         for variant in pathVariants(for: path) {
-            let viaKfs = helper.kfsListDirectory(variant)
-            if !viaKfs.isEmpty {
-                usedKfs = true
-                return viaKfs
+            let entries = helper.kfsListDirectory(variant)
+            if !entries.isEmpty {
+                return entries
             }
         }
 
         return []
     }
 
-    private func cardBackgroundFile(in cardDirectory: String, usedKfs: inout Bool) -> String? {
-        let files = listDirectory(cardDirectory, usedKfs: &usedKfs)
+    private func cardBackgroundFile(in cardDirectory: String) -> String? {
+        let files = listDirectory(cardDirectory)
         guard !files.isEmpty else {
             return nil
         }
@@ -98,8 +96,8 @@ struct ContentView: View {
         }
     }
 
-    private func collectCardBundles(in cardsRoot: String, usedKfs: inout Bool) -> [CardBundleCandidate] {
-        let entries = listDirectory(cardsRoot, usedKfs: &usedKfs)
+    private func collectCardBundles(in cardsRoot: String) -> [CardBundleCandidate] {
+        let entries = listDirectory(cardsRoot)
         guard !entries.isEmpty else {
             return []
         }
@@ -113,7 +111,7 @@ struct ContentView: View {
             }
 
             let candidateDirectory = joinPath(cardsRoot, entry)
-            if let backgroundFile = cardBackgroundFile(in: candidateDirectory, usedKfs: &usedKfs) {
+            if let backgroundFile = cardBackgroundFile(in: candidateDirectory) {
                 if !seenDirectories.contains(candidateDirectory) {
                     bundles.append(
                         CardBundleCandidate(
@@ -128,14 +126,14 @@ struct ContentView: View {
             }
 
             // On some versions, card bundles are nested one level deeper.
-            let nestedEntries = listDirectory(candidateDirectory, usedKfs: &usedKfs)
+            let nestedEntries = listDirectory(candidateDirectory)
             for nested in nestedEntries {
                 if nested == "." || nested == ".." {
                     continue
                 }
 
                 let nestedDirectory = joinPath(candidateDirectory, nested)
-                if let backgroundFile = cardBackgroundFile(in: nestedDirectory, usedKfs: &usedKfs), !seenDirectories.contains(nestedDirectory) {
+                if let backgroundFile = cardBackgroundFile(in: nestedDirectory), !seenDirectories.contains(nestedDirectory) {
                     bundles.append(
                         CardBundleCandidate(
                             directoryPath: nestedDirectory,
@@ -151,7 +149,7 @@ struct ContentView: View {
         return bundles
     }
 
-    private func discoverCardsRoot(usedKfs: inout Bool) -> String? {
+    private func discoverCardsRoot() -> String? {
         var candidates: [String] = []
 
         if let detected = exploit.detectedCardsRootPath {
@@ -162,7 +160,7 @@ struct ContentView: View {
         }
 
         for candidate in candidates {
-            let found = collectCardBundles(in: candidate, usedKfs: &usedKfs)
+            let found = collectCardBundles(in: candidate)
             if !found.isEmpty {
                 scanLog("candidate \(candidate) yielded \(found.count) card bundle(s)")
                 return candidate
@@ -175,16 +173,16 @@ struct ContentView: View {
         ]
 
         for container in passContainers {
-            let topEntries = listDirectory(container, usedKfs: &usedKfs)
+            let topEntries = listDirectory(container)
 
             for primary in ["Cards", "Passes", "Wallet"] where topEntries.contains(primary) {
                 let candidate = joinPath(container, primary)
-                if !collectCardBundles(in: candidate, usedKfs: &usedKfs).isEmpty {
+                if !collectCardBundles(in: candidate).isEmpty {
                     return candidate
                 }
 
                 let nestedCards = joinPath(candidate, "Cards")
-                if !collectCardBundles(in: nestedCards, usedKfs: &usedKfs).isEmpty {
+                if !collectCardBundles(in: nestedCards).isEmpty {
                     return nestedCards
                 }
             }
@@ -200,12 +198,12 @@ struct ContentView: View {
                 }
 
                 let candidate = joinPath(container, entry)
-                if !collectCardBundles(in: candidate, usedKfs: &usedKfs).isEmpty {
+                if !collectCardBundles(in: candidate).isEmpty {
                     return candidate
                 }
 
                 let nestedCards = joinPath(candidate, "Cards")
-                if !collectCardBundles(in: nestedCards, usedKfs: &usedKfs).isEmpty {
+                if !collectCardBundles(in: nestedCards).isEmpty {
                     return nestedCards
                 }
             }
@@ -222,10 +220,9 @@ struct ContentView: View {
             "timestamp=\(timestamp)",
             "status=\(exploit.statusMessage)",
             "darksword_ready=\(exploit.darkswordReady)",
-            "kfs_ready=\(exploit.kfsReady)",
+            "sandbox_escaped=\(exploit.sandboxEscaped)",
             "kernproc_offset=\(exploit.hasKernprocOffset ? String(format: "0x%llx", exploit.kernprocOffset) : "missing")",
             "cards_root=\(detectedCardsRoot)",
-            "scan_mode=\(usedKfsForScan ? "kfs" : "direct")",
             ""
         ].joined(separator: "\n")
 
@@ -238,9 +235,7 @@ struct ContentView: View {
     }
 
     private func getPasses() -> [Card] {
-        var usedKfs = false
-        guard let cardsRoot = discoverCardsRoot(usedKfs: &usedKfs) else {
-            usedKfsForScan = usedKfs
+        guard let cardsRoot = discoverCardsRoot() else {
             detectedCardsRoot = "not-detected"
             exploit.setDetectedCardsRootPath(nil)
             return []
@@ -251,7 +246,7 @@ struct ContentView: View {
 
         var data = [Card]()
 
-        let bundles = collectCardBundles(in: cardsRoot, usedKfs: &usedKfs)
+        let bundles = collectCardBundles(in: cardsRoot)
         scanLog("final scan root=\(cardsRoot) bundles=\(bundles.count)")
 
         for bundle in bundles {
@@ -265,7 +260,6 @@ struct ContentView: View {
             )
         }
 
-        usedKfsForScan = usedKfs
         return data
     }
 
@@ -292,7 +286,6 @@ struct ContentView: View {
 
     private func openWalletApp() {
         // Open Wallet so it reads card directories, warming the kernel namecache.
-        // After returning, a "Scan Again" will find entries via KFS.
         for scheme in ["shoebox://", "wallet://"] {
             if let url = URL(string: scheme), UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url)
@@ -467,7 +460,7 @@ struct ContentView: View {
                                     recheckAndReload()
                                 }
                             }
-                            .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                            .disabled(exploit.darkswordRunning)
                             .foregroundColor(.white)
                         }
 
@@ -477,7 +470,7 @@ struct ContentView: View {
                                     recheckAndReload()
                                 }
                             }
-                            .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                            .disabled(exploit.darkswordRunning)
                             .foregroundColor(.white)
                         }
 
@@ -485,7 +478,7 @@ struct ContentView: View {
                             Button("Run All") {
                                 runAllAndReload()
                             }
-                            .disabled(exploit.darkswordRunning || exploit.kfsRunning)
+                            .disabled(exploit.darkswordRunning)
                             .foregroundColor(.white)
                         }
                     }
