@@ -5,10 +5,10 @@
 ## Features
 
 - **Apple Pay card customization** — Replace card background images directly from your photo library
-- **Auto kernproc offset resolution** — Downloads your device's kernelcache and resolves kernel offsets via XPF (XNU PatchFinder), no manual hex input needed
-- **Integrated exploit engine** — DarkSword + sandbox escape + KFS, all built-in
+- **Auto kernproc offset resolution** — Downloads your device's kernelcache and resolves kernel offsets via XPF (XNU PatchFinder)
+- **Integrated exploit engine** — DarkSword + sandbox escape, all built-in
 - **Card management** — Backup, restore, rename cards with nicknames
-- **Community cards** — Browse and download card designs from a built-in catalog
+- **Community cards** — Browse and download card designs from a built-in (hopefully) community-driven catalog
 - **8-language localization** — English, Spanish, French, Italian, German, Russian, Chinese (Simplified), Japanese
   
 - **iOS 26.0.1/iOS 18.7.1 is the max scope, anything more recent than that will likely never be compatible**
@@ -97,19 +97,20 @@ If you find CardioDS useful, consider buying me a coffee:
 
 ## Credits
 
-- [cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
-- [htimesnine](https://github.com/htimesnine/DarkSword-RCE) — Original DarkSword exploit source
-- [opa334](https://github.com/opa334) — DarkSword kexploit PoC, ChOma (MIT), XPF (MIT)
-- [rooootdev](https://github.com/rooootdev/lara) — Lara (AGPL-3.0), XPF integration reference
-- [AlfieCG](https://github.com/alfiecg24) — libgrabkernel2 (MIT)
-- [AppInstallerIOS](https://github.com/AppInstalleriOS) — Community card images
-
+- [GitHub - cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
+- [GitHub - htimesnine](https://github.com/htimesnine/DarkSword-RCE) — Original DarkSword exploit source
+- [GitHub - opa334](https://github.com/opa334) — DarkSword kexploit PoC, ChOma, XPF
+- [GitHub - AlfieCG](https://github.com/alfiecg24) — libgrabkernel2
+- [GitHub - rooootdev](https://github.com/rooootdev/lara) — Lara (AGPL-3.0), XPF integration reference
+- [reddit r/CreditCards - chaoxu](https://dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh) — Community card images post
+- [dynalist.io - chaoxu & others](https://dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh) — Community card images
+  
 ## License
 
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
 
 **Third-party components:**
-- XPF, ChOma (opa334) — MIT
-- libgrabkernel2 (AlfieCG) — MIT
+- XPF, ChOma (opa334)
+- libgrabkernel2 (AlfieCG)
 - Lara (rooootdev) — AGPL-3.0
 - DarkSword (htimesnine / opa334) — see upstream repos
