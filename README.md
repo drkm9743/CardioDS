@@ -89,6 +89,12 @@ card-test/
 └── ja.lproj/Localizable.strings
 ```
 
+## Support
+
+If you find CardioDS useful, consider buying me a coffee:
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/argz97)
+
 ## Credits
 
 - [cisc0disco](https://github.com/cisc0disco/Cardio) — Original Cardio app
@@ -100,7 +106,10 @@ card-test/
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
 
-**Third-party components have their own licenses:**
-- Lara (rooootdev) — AGPL-3.0 (used only as reference; no AGPL code is copied)
+**Third-party components:**
+- XPF, ChOma (opa334) — MIT
+- libgrabkernel2 (AlfieCG) — MIT
+- Lara (rooootdev) — AGPL-3.0
+- DarkSword (htimesnine / opa334) — see upstream repos
