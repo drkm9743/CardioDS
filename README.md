@@ -2,7 +2,7 @@
 
 > Customize your Apple Pay card artwork on iOS 18 — with auto kernel offset resolution.
 
-**Version 1.0** · iOS 17.2+ · Swift 5 · Xcode 14
+**Version 1.0** · iOS 17.2.1+ · Swift 5 · Xcode 14
 
 ---
 
