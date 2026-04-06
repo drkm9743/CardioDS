@@ -810,49 +810,35 @@ struct CommunityView: View {
                         .padding(.bottom, 8)
                     }
 
-                    // Attribution
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("community_attribution")
-                            .font(.system(size: 11))
-                            .foregroundColor(.white.opacity(0.4))
-                        Link("dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh",
-                             destination: URL(string: "https://dynalist.io/d/ldKY6rbMR3LPnWz4fTvf_HCh")!)
-                        .font(.system(size: 11))
-                        .foregroundColor(.cyan.opacity(0.6))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-
-                    // Ko-fi
-                    Link(destination: URL(string: "https://ko-fi.com/argz97")!) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "cup.and.saucer.fill")
-                                .font(.system(size: 13))
-                            Text("support_kofi")
-                                .font(.system(size: 13, weight: .medium))
+                    // Ko-fi + Discord
+                    HStack(spacing: 10) {
+                        Link(destination: URL(string: "https://ko-fi.com/argz97")!) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "cup.and.saucer.fill")
+                                    .font(.system(size: 13))
+                                Text("support_kofi")
+                                    .font(.system(size: 13, weight: .medium))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 1.0, green: 0.36, blue: 0.36))
+                            .cornerRadius(8)
                         }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(Color(red: 1.0, green: 0.36, blue: 0.36))
-                        .cornerRadius(8)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
 
-                    // Discord
-                    Link(destination: URL(string: "https://discord.com/invite/77FT6fNmBc")!) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "bubble.left.and.bubble.right.fill")
-                                .font(.system(size: 13))
-                            Text("join_discord")
-                                .font(.system(size: 13, weight: .medium))
+                        Link(destination: URL(string: "https://discord.com/invite/77FT6fNmBc")!) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "bubble.left.and.bubble.right.fill")
+                                    .font(.system(size: 13))
+                                Text("join_discord")
+                                    .font(.system(size: 13, weight: .medium))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 0.35, green: 0.39, blue: 0.95))
+                            .cornerRadius(8)
                         }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 8)
-                        .background(Color(red: 0.35, green: 0.39, blue: 0.95))
-                        .cornerRadius(8)
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 20)
