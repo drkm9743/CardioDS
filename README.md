@@ -20,6 +20,7 @@
 ### Important Notes
 
 - **iOS 26.0.1 / iOS 18.7.1 is the maximum scope** — anything more recent will likely never be compatible
+- **iOS 18.7.3 / iOS 18.7.7** fixed DarkSword vulnerability, these versions are exceptions and it will never be supported.
 - **Only tested on 18.6.2 arm64e A18 Pro** — if you are unable to make CardioDS work, report it through Discord or GitHub Issues
 - **Sideload only** — LiveContainer, is NOT supported and never will be supported, don't ask for it.
 - **Community Cards tab may load slowly** — The catalog contains hundreds of high-resolution card images; it may take a little while for the tab to load.
