@@ -121,5 +121,12 @@
 "custom_name_placeholder" = "例如 我的自定义设计";
 "custom_name_message" = "输入你的卡片设计名称。";
 
+/* Submit sheet */
+"submit_sheet_title" = "提交卡片";
+"submit_section_info" = "卡片信息";
+"submit_card_name" = "卡片名称";
+"submit_issuer" = "发卡方（如 Chase、Amex）";
+"submit_country" = "国家（如 US、CN）";
+
 /* Settings */
 "settings_system_language" = "系统语言";

@@ -118,7 +118,7 @@ final class MyCardsViewModel: ObservableObject {
         return try? Data(contentsOf: path)
     }
 
-    func submitToGitHub(_ card: SavedCard) {
+    func submitToGitHub(_ card: SavedCard, name: String, issuer: String, country: String) {
         guard !isSubmitting else { return }
         guard let data = imageDataFor(card),
               let image = UIImage(data: data) else {
@@ -129,9 +129,9 @@ final class MyCardsViewModel: ObservableObject {
         isSubmitting = true
         Task {
             let result = await GitHubService.submitDumpedCard(
-                name: card.name,
-                bundleName: card.bundleName,
-                date: card.displayDate,
+                name: name,
+                issuer: issuer,
+                country: country,
                 image: image
             )
             isSubmitting = false
@@ -150,6 +150,10 @@ struct MyCardsView: View {
     @State private var showSaveSheet = false
     @State private var showAlert = false
     @State private var cardToDelete: SavedCard?
+    @State private var cardToSubmit: SavedCard?
+    @State private var submitName = ""
+    @State private var submitIssuer = ""
+    @State private var submitCountry = ""
 
     private let helper = ObjcHelper()
 
@@ -218,7 +222,12 @@ struct MyCardsView: View {
                                     exploit: exploit,
                                     onApply: { applyCard(saved) },
                                     onDelete: { cardToDelete = saved },
-                                    onSubmit: { vm.submitToGitHub(saved) }
+                                    onSubmit: {
+                                        submitName = saved.bundleName
+                                        submitIssuer = ""
+                                        submitCountry = ""
+                                        cardToSubmit = saved
+                                    }
                                 )
                             }
                         }
@@ -252,6 +261,25 @@ struct MyCardsView: View {
             }
         } message: {
             Text("mycards_delete_confirm")
+        }
+        .sheet(isPresented: .init(
+            get: { cardToSubmit != nil },
+            set: { if !$0 { cardToSubmit = nil } }
+        )) {
+            SubmitCardSheet(
+                cardName: $submitName,
+                issuer: $submitIssuer,
+                country: $submitCountry,
+                isSubmitting: vm.isSubmitting,
+                onSubmit: {
+                    if let card = cardToSubmit {
+                        vm.submitToGitHub(card, name: submitName, issuer: submitIssuer, country: submitCountry)
+                        cardToSubmit = nil
+                    }
+                },
+                onCancel: { cardToSubmit = nil }
+            )
+            .presentationDetents([.medium])
         }
     }
 
@@ -380,5 +408,57 @@ struct SavedCardRow: View {
         .padding(10)
         .background(Color.white.opacity(0.06))
         .cornerRadius(10)
+    }
+}
+
+// MARK: - Submit Card Sheet
+
+struct SubmitCardSheet: View {
+    @Binding var cardName: String
+    @Binding var issuer: String
+    @Binding var country: String
+    let isSubmitting: Bool
+    let onSubmit: () -> Void
+    let onCancel: () -> Void
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text(L("submit_section_info"))) {
+                    TextField(L("submit_card_name"), text: $cardName)
+                    TextField(L("submit_issuer"), text: $issuer)
+                    TextField(L("submit_country"), text: $country)
+                }
+
+                Section {
+                    Button {
+                        onSubmit()
+                    } label: {
+                        if isSubmitting {
+                            HStack {
+                                ProgressView()
+                                Text(L("custom_submitting"))
+                            }
+                            .frame(maxWidth: .infinity)
+                        } else {
+                            Text(L("custom_submit_send"))
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    .disabled(cardName.trimmingCharacters(in: .whitespaces).isEmpty
+                              || issuer.trimmingCharacters(in: .whitespaces).isEmpty
+                              || country.trimmingCharacters(in: .whitespaces).isEmpty
+                              || isSubmitting)
+                }
+            }
+            .navigationTitle(L("submit_sheet_title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L("card_cancel")) { onCancel() }
+                }
+            }
+        }
     }
 }

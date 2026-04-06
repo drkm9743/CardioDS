@@ -128,5 +128,12 @@
 "custom_name_placeholder" = "e.g. My Custom Design";
 "custom_name_message" = "Enter a name for your custom card design.";
 
+/* Submit sheet */
+"submit_sheet_title" = "Submit Card";
+"submit_section_info" = "Card Information";
+"submit_card_name" = "Card Name";
+"submit_issuer" = "Issuer (e.g. Chase, Amex)";
+"submit_country" = "Country (e.g. US, ES)";
+
 /* Settings */
 "settings_system_language" = "System Language";

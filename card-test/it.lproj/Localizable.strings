@@ -120,5 +120,12 @@
 "custom_name_placeholder" = "es. Il Mio Design Personalizzato";
 "custom_name_message" = "Inserisci un nome per il tuo design di carta.";
 
+/* Submit sheet */
+"submit_sheet_title" = "Invia Carta";
+"submit_section_info" = "Informazioni della Carta";
+"submit_card_name" = "Nome della Carta";
+"submit_issuer" = "Emittente (es. Chase, Amex)";
+"submit_country" = "Paese (es. US, IT)";
+
 /* Settings */
 "settings_system_language" = "Lingua di Sistema";

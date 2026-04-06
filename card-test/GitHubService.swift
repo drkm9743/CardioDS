@@ -31,7 +31,7 @@ enum GitHubService {
 
     // MARK: - Submit Custom Card
 
-    static func submitCustomCard(name: String, image: UIImage) async -> SubmissionResult {
+    static func submitCustomCard(name: String, issuer: String, country: String, image: UIImage) async -> SubmissionResult {
         guard let resized = resizeForCard(image),
               let jpegData = compressForUpload(resized) else {
             return SubmissionResult(success: false, message: L("custom_submit_error"), issueURL: nil)
@@ -45,8 +45,8 @@ enum GitHubService {
         | Field | Value |
         |-------|-------|
         | **Card Name** | \(name) |
-        | **Issuer** | Custom |
-        | **Country** | N/A |
+        | **Issuer** | \(issuer) |
+        | **Country** | \(country) |
 
         ### Card Image
 
@@ -67,21 +67,21 @@ enum GitHubService {
 
     // MARK: - Submit Dumped Card
 
-    static func submitDumpedCard(name: String, bundleName: String, date: String, image: UIImage) async -> SubmissionResult {
+    static func submitDumpedCard(name: String, issuer: String, country: String, image: UIImage) async -> SubmissionResult {
         guard let jpegData = compressForUpload(image) else {
             return SubmissionResult(success: false, message: L("mycards_submit_read_error"), issueURL: nil)
         }
 
         let base64 = jpegData.base64EncodedString()
-        let title = "Community Card Submission: \(bundleName)"
+        let title = "Community Card Submission: \(name)"
         let body = """
         ## Community Card Submission
 
         | Field | Value |
         |-------|-------|
         | **Card Name** | \(name) |
-        | **Bundle Name** | \(bundleName) |
-        | **Date Saved** | \(date) |
+        | **Issuer** | \(issuer) |
+        | **Country** | \(country) |
 
         ### Card Image
 
@@ -161,13 +161,32 @@ enum GitHubService {
     /// Progressively lower JPEG quality until base64 fits GitHub's 65 536-char issue body limit.
     /// 44 000 bytes raw ≈ 59 000 chars base64, leaving room for the markdown template.
     private static func compressForUpload(_ image: UIImage) -> Data? {
+        let maxBytes = 44_000
+
+        // Try progressive quality reduction at current size
         for q in stride(from: 0.6, through: 0.05, by: -0.05) {
-            if let data = image.jpegData(compressionQuality: CGFloat(q)), data.count <= 44_000 {
+            if let data = image.jpegData(compressionQuality: CGFloat(q)), data.count <= maxBytes {
                 return data
             }
         }
-        // Last resort: lowest quality
-        return image.jpegData(compressionQuality: 0.01)
+        if let data = image.jpegData(compressionQuality: 0.01), data.count <= maxBytes {
+            return data
+        }
+
+        // Still too large — progressively shrink dimensions
+        var scale: CGFloat = 0.75
+        while scale >= 0.2 {
+            let newSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+            let renderer = UIGraphicsImageRenderer(size: newSize)
+            let scaled = renderer.image { _ in image.draw(in: CGRect(origin: .zero, size: newSize)) }
+            for q in [0.3, 0.1, 0.01] as [CGFloat] {
+                if let data = scaled.jpegData(compressionQuality: q), data.count <= maxBytes {
+                    return data
+                }
+            }
+            scale -= 0.15
+        }
+        return nil
     }
 
     // MARK: - Image Resize

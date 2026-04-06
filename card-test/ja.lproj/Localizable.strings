@@ -120,5 +120,12 @@
 "custom_name_placeholder" = "例: マイカスタムデザイン";
 "custom_name_message" = "カードデザインの名前を入力してください。";
 
+/* Submit sheet */
+"submit_sheet_title" = "カードを送信";
+"submit_section_info" = "カード情報";
+"submit_card_name" = "カード名";
+"submit_issuer" = "発行元（例: Chase, Amex）";
+"submit_country" = "国（例: US, JP）";
+
 /* Settings */
 "settings_system_language" = "システム言語";

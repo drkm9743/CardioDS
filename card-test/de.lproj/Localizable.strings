@@ -121,5 +121,12 @@
 "custom_name_placeholder" = "z.B. Mein eigenes Design";
 "custom_name_message" = "Gib einen Namen für dein Kartendesign ein.";
 
+/* Submit sheet */
+"submit_sheet_title" = "Karte einreichen";
+"submit_section_info" = "Karteninformationen";
+"submit_card_name" = "Kartenname";
+"submit_issuer" = "Herausgeber (z.B. Chase, Amex)";
+"submit_country" = "Land (z.B. US, DE)";
+
 /* Settings */
 "settings_system_language" = "Systemsprache";

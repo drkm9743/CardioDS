@@ -1,0 +1,91 @@
+Card image domains:
+  asset-cdn.uscardforum.com: 295 URLs
+  d1do1axor6p0u1.cloudfront.net: 6 URLs
+  forum.uscreditcardguide.com: 26 URLs
+  i.imgur.com: 1 URLs
+  pics.paypal.com: 6 URLs
+  u.cubeupload.com: 480 URLs
+Total card image URLs: 827
+
+Extracted 490 content blocks
+
+First 40 content blocks:
+    0: 
+    1: United States
+    2: American Express
+    3: Business
+    4: Amazon Business Prime [IMG]
+    5: Blue Business Cash
+    6: Blue Business Plus [IMG]
+    7: Blue Business Plus 2020 low res [IMG]
+    8: Business Centrion
+    9: Business Gold [IMG]
+   10: Business Cash low res [IMG]
+   11: Business Green [IMG]
+   12: Business Platinum [IMG]
+   13: Bunisess Platinum 2024 jpeg [IMG]
+   14: Business Platinum 2025jpeg [IMG]
+   15: Plum [IMG]
+   16: Additional Card [IMG]
+   17: Business Delta Reserve 747 jpeg [IMG]
+   18: Business Delta Platinumjpeg [IMG]
+   19: Business Marriot Bonveyjpeg [IMG]
+   20: Personal
+   21: Delta Blue low res [IMG]
+   22: Delta Gold [IMG]
+   23: Delta Platinum [IMG]
+   24: Blue Sky [IMG]
+   25: Delta Reserve
+   26: debit low res [IMG]
+   27: Blue
+   28: Blue Cash Everyday [IMG]
+   29: Blue Cash Preferred [IMG]
+   30: Cash Magnet
+   31: Companion [IMG]
+   32: Schwab jpeg [IMG]
+   33: Morgan Stanley [IMG]
+   34: Every Day [IMG]
+   35: Every Day 2024 low res [IMG]
+   36: Every Day Preferred low res [IMG]
+   37: Green JPjpeg [IMG]
+   38: Gold JPjpeg [IMG]
+   39: Hilton Honors old [IMG]
+
+=== 389 unique cards extracted ===
+
+
+--- Australia / Other (3) ---
+  [PNG] ANZ Debit: https://u.cubeupload.com/realname/3.png
+  [PNG] HSBC Everyday Global Debit: https://u.cubeupload.com/realname/1.png
+  [PNG] Commonwealth Bank of Australia Debit: https://u.cubeupload.com/realname/2.png
+
+--- Canada / HSBC (19) ---
+  [PNG] Premier World Elite (Canada): https://u.cubeupload.com/ccbackground/hsbcpremierworldelit.png
+  [JPG] Amex Green: https://asset-cdn.uscardforum.com/optimized/4X/6/d/e/6de9b66c647fcdfc68b42fdf25d961b69ba4bdd6_2_1380x870.jpeg
+  [JPG] Amex Cobalt: https://asset-cdn.uscardforum.com/original/4X/f/1/b/f1b6c6f481bb2a994006d5779dc073abb0da05a7.jpeg
+  [PNG] BMO Cashback: https://u.cubeupload.com/uscreditcardstrategy/bmocashback.png
+  [PNG] BMO Harris Debit: https://asset-cdn.uscardforum.com/optimized/4X/c/f/0/cf0d80db57d5bf8f9994107e177abf65d0544d48_2_1380x870.png
+  [JPG] BMO Mcgill Student Mastercard: https://asset-cdn.uscardforum.com/original/4X/9/3/f/93fc3304e8be9d094f783a711e1cd1c3554db720.jpeg
+  [JPG] Brim: https://asset-cdn.uscardforum.com/optimized/4X/3/1/b/31b195b0470bea2ebfdc9a17ad1742e2d1322195_2_1380x870.jpeg
+  [PNG] RMC Rewards Visa: https://u.cubeupload.com/uscreditcardstrategy/RBCrewardsvisa.png
+  [JPG] ION+: https://asset-cdn.uscardforum.com/optimized/4X/7/d/d/7dd0355d99fb4fbbf74b52b2b433aaa66d86fc8b_2_1380x870.jpeg
+  [PNG] EQ Bank: https://asset-cdn.uscardforum.com/optimized/4X/d/9/5/d958a093ccd558e89b2755d94ddeeb1eab4b430e_2_1380x870.png
+  [JPG] MBNA Rewards WE: https://asset-cdn.uscardforum.com/optimized/4X/3/1/f/31f8a2f367885878544b1e43604ca627768b6cf0_2_1380x870.jpeg
+  [JPG] Neo Cathay: https://asset-cdn.uscardforum.com/optimized/3X/b/9/b90e359e50942cae5e04e2d50120bbb5ca391b23_2_1380x870.jpeg
+  [JPG] Rogers: https://asset-cdn.uscardforum.com/optimized/3X/d/6/d6d69bcf301dcd273cd2f4089f8175cfd4c03dbe_2_1380x870.jpeg
+  [JPG] Financial: https://asset-cdn.uscardforum.com/optimized/3X/5/f/5f28abd97c5f5cacd0d43c662c4f9e4ddf46e5c6_2_1380x870.jpeg
+  [JPG] CIBC Aventura: https://asset-cdn.uscardforum.com/original/4X/3/8/d/38dfa1dc0386a905953123488bcf484fc3ab0ae1.jpeg
+  [JPG] Amex Platinum: https://asset-cdn.uscardforum.com/original/4X/e/1/a/e1ac1139d88c3abe15b28599117094a669f80b1a.jpeg
+  [PNG] PayPower: https://asset-cdn.uscardforum.com/original/4X/4/4/d/44de56cb520852515d701daf1469f811e15300cc.png
+  [JPG] Scotiabank Momentum: https://asset-cdn.uscardforum.com/optimized/4X/0/0/8/008f3a581d46c7b80b728cc28be40fcacce8888e_2_1380x870.jpeg
+  [PNG] Wealthsimple Virtual Card: https://asset-cdn.uscardforum.com/optimized/4X/5/7/a/57afd7308bcfc017c86e21591eef36414861d94a_2_1380x870.png
+
+--- Hong Kong / American Express (1) ---
+Traceback (most recent call last):
+  File "D:\CardioSword\parse_dynalist_v2.py", line 207, in <module>
+    print(f'  [{ext}] {c["name"]}: {c["url"]}')
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 22-24: character maps to <undefined>

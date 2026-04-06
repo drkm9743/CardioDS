@@ -121,5 +121,12 @@
 "custom_name_placeholder" = "напр. Мой Дизайн";
 "custom_name_message" = "Введите название для вашего дизайна карты.";
 
+/* Submit sheet */
+"submit_sheet_title" = "Отправить карту";
+"submit_section_info" = "Информация о карте";
+"submit_card_name" = "Название карты";
+"submit_issuer" = "Эмитент (напр. Chase, Amex)";
+"submit_country" = "Страна (напр. US, RU)";
+
 /* Settings */
 "settings_system_language" = "Системный язык";
