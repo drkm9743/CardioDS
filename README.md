@@ -88,10 +88,6 @@ The exploit execution could trigger reboots on your device, don't consider it as
 
 Alternatively, exploit execution could take from seconds to minutes, be patient.
 
-## Known Issues
-
-- **Community Cards search crash** — Rapidly deleting text in the search bar may cause the app to crash on some devices. This is a SwiftUI layout issue triggered by large view hierarchy changes when the result set shifts from a few filtered cards back to 300+ cards. **Workaround:** clear the search field in one tap (long-press → Select All → Delete) instead of holding backspace, or scroll manually instead of using search. This will be fixed on future releases.
-
 ## Architecture
 
 ```
