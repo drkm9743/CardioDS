@@ -25,5 +25,14 @@
     "category": "Revolut",
     "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/revolut-virtual-d-bito-6.jpg",
     "author": "drkm9743"
+  },
+  {
+    "id": "revolut-crypto-5",
+    "name": "Revolut Crypto",
+    "issuer": "Revolut",
+    "country": "ES",
+    "category": "Revolut",
+    "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/revolut-crypto-5.jpg",
+    "author": "drkm9743"
   }
 ]
