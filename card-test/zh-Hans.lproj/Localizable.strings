@@ -79,3 +79,19 @@
 "community_tap_retry" = "点击重试";
 "community_download" = "下载";
 "support_kofi" = "在 Ko-fi 上支持 ☕";
+
+/* Card number editor */
+"card_number_edit" = "卡号";
+"card_number_title" = "编辑卡号";
+"card_number_placeholder" = "后4位数字";
+"card_number_message" = "当前卡面显示号码：%@\n输入新数字或留空以移除。";
+"card_number_message_empty" = "此卡未显示号码。\n输入要显示的数字。";
+"card_number_restore_original" = "恢复原始";
+"card_number_read_error" = "无法读取此卡的 pass.json。";
+"card_number_no_backup" = "未找到 pass.json 备份。";
+
+/* Image source picker */
+"card_pick_source" = "选择图片来源";
+"card_source_gallery" = "照片图库";
+"card_source_files" = "文件";
+"join_discord" = "加入 Discord";

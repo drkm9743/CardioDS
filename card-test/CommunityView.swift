@@ -709,6 +709,23 @@ struct CommunityView: View {
                         .cornerRadius(8)
                     }
                     .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+
+                    // Discord
+                    Link(destination: URL(string: "https://discord.com/invite/77FT6fNmBc")!) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "bubble.left.and.bubble.right.fill")
+                                .font(.system(size: 13))
+                            Text("join_discord")
+                                .font(.system(size: 13, weight: .medium))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(Color(red: 0.35, green: 0.39, blue: 0.95))
+                        .cornerRadius(8)
+                    }
+                    .padding(.horizontal, 16)
                     .padding(.bottom, 20)
                 }
                 .padding(.top, 12)

@@ -86,3 +86,19 @@
 "community_tap_retry" = "Tap to retry";
 "community_download" = "Download";
 "support_kofi" = "Support on Ko-fi ☕";
+
+/* Card number editor */
+"card_number_edit" = "Number";
+"card_number_title" = "Edit Card Number";
+"card_number_placeholder" = "Last 4 digits";
+"card_number_message" = "Current number shown on card: %@\nEnter new digits or leave empty to remove.";
+"card_number_message_empty" = "No number shown on this card.\nEnter digits to display on the card.";
+"card_number_restore_original" = "Restore Original";
+"card_number_read_error" = "Could not read pass.json from this card.";
+"card_number_no_backup" = "No pass.json backup found for this card.";
+
+/* Image source picker */
+"card_pick_source" = "Choose Image Source";
+"card_source_gallery" = "Photo Library";
+"card_source_files" = "Files";
+"join_discord" = "Join Discord";

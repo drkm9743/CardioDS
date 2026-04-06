@@ -79,3 +79,19 @@
 "community_tap_retry" = "タップして再試行";
 "community_download" = "ダウンロード";
 "support_kofi" = "Ko-fi でサポート ☕";
+
+/* Card number editor */
+"card_number_edit" = "番号";
+"card_number_title" = "カード番号を編集";
+"card_number_placeholder" = "下4桁";
+"card_number_message" = "現在カードに表示されている番号：%@\n新しい番号を入力するか、空欄にして削除。";
+"card_number_message_empty" = "このカードに番号は表示されていません。\n表示する番号を入力してください。";
+"card_number_restore_original" = "元に戻す";
+"card_number_read_error" = "このカードの pass.json を読み取れませんでした。";
+"card_number_no_backup" = "pass.json のバックアップが見つかりません。";
+
+/* Image source picker */
+"card_pick_source" = "画像ソースを選択";
+"card_source_gallery" = "フォトライブラリ";
+"card_source_files" = "ファイル";
+"join_discord" = "Discord に参加";

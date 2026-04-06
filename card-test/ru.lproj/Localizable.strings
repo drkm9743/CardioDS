@@ -79,3 +79,19 @@
 "community_tap_retry" = "Нажмите для повтора";
 "community_download" = "Скачать";
 "support_kofi" = "Поддержать на Ko-fi ☕";
+
+/* Card number editor */
+"card_number_edit" = "Номер";
+"card_number_title" = "Изменить Номер Карты";
+"card_number_placeholder" = "Последние 4 цифры";
+"card_number_message" = "Текущий номер на карте: %@\nВведите новые цифры или оставьте пустым для удаления.";
+"card_number_message_empty" = "На этой карте не отображается номер.\nВведите цифры для отображения.";
+"card_number_restore_original" = "Восстановить оригинал";
+"card_number_read_error" = "Не удалось прочитать pass.json этой карты.";
+"card_number_no_backup" = "Резервная копия pass.json не найдена.";
+
+/* Image source picker */
+"card_pick_source" = "Выберите источник изображения";
+"card_source_gallery" = "Медиатека";
+"card_source_files" = "Файлы";
+"join_discord" = "Присоединиться в Discord";

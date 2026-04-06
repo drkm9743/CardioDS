@@ -79,3 +79,19 @@
 "community_tap_retry" = "Tippe zum Wiederholen";
 "community_download" = "Herunterladen";
 "support_kofi" = "Unterstütze auf Ko-fi ☕";
+
+/* Card number editor */
+"card_number_edit" = "Nummer";
+"card_number_title" = "Kartennummer Bearbeiten";
+"card_number_placeholder" = "Letzte 4 Ziffern";
+"card_number_message" = "Aktuelle Nummer auf der Karte: %@\nGib neue Ziffern ein oder lass leer zum Entfernen.";
+"card_number_message_empty" = "Keine Nummer auf dieser Karte angezeigt.\nGib Ziffern ein, die angezeigt werden sollen.";
+"card_number_restore_original" = "Original wiederherstellen";
+"card_number_read_error" = "pass.json dieser Karte konnte nicht gelesen werden.";
+"card_number_no_backup" = "Kein pass.json-Backup gefunden.";
+
+/* Image source picker */
+"card_pick_source" = "Bildquelle wählen";
+"card_source_gallery" = "Fotomediathek";
+"card_source_files" = "Dateien";
+"join_discord" = "Discord beitreten";
