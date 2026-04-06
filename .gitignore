@@ -2,6 +2,15 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+## macOS
+.DS_Store
+
+## Scripts / dev tools
+*.py
+*.txt
+!LICENSE
+setup_xpf.sh
+
 ## User settings
 xcuserdata/
 
