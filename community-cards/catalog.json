@@ -88,5 +88,14 @@
     "category": "Custom",
     "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/paisa-laya-meme-15.jpg",
     "author": "drkm9743"
+  },
+  {
+    "id": "paisa-double-meme-17",
+    "name": "Paisa double meme",
+    "issuer": "Custom",
+    "country": "N/A",
+    "category": "Custom",
+    "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/paisa-double-meme-17.jpg",
+    "author": "drkm9743"
   }
 ]
