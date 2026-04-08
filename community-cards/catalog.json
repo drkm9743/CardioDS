@@ -97,5 +97,14 @@
     "category": "Custom",
     "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/paisa-double-meme-17.jpg",
     "author": "drkm9743"
+  },
+  {
+    "id": "paisa-barbad-meme-16",
+    "name": "Paisa Barbad meme",
+    "issuer": "Custom",
+    "country": "N/A",
+    "category": "Custom",
+    "imageURL": "https://raw.githubusercontent.com/drkm9743/CardioDS/main/community-cards/images/paisa-barbad-meme-16.jpg",
+    "author": "drkm9743"
   }
 ]
