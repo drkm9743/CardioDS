@@ -74,7 +74,7 @@ jobs:
           rm -rf Payload
           mkdir -p Payload
           cp -R "$APP_PATH" Payload/
-          zip -qry Cardio-unsigned.ipa Payload
+          zip -qry cardio-unsigned.ipa Payload
 
       - name: Package TrollStore TIPA
         run: |
@@ -121,21 +121,21 @@ jobs:
 
           (
             cd Payload-trollstore
-            zip -qry ../Cardio-trollstore.tipa Payload
+            zip -qry ../cardio-trollstore.tipa Payload
           )
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cardio-unsigned-ipa
-          path: Cardio-unsigned.ipa
+          name: cardio-unsigned.ipa
+          path: cardio-unsigned.ipa
 
       - name: Upload TrollStore artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cardio-trollstore-tipa
+          name: cardio-trollstore.tipa
           path: |
-            Cardio-trollstore.tipa
+            cardio-trollstore.tipa
             cardio-trollstore-entitlements.plist
 
       - name: Upload build logs
