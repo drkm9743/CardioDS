@@ -10,6 +10,7 @@
 *.txt
 !LICENSE
 setup_xpf.sh
+Resources/
 
 ## User settings
 xcuserdata/

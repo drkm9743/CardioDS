@@ -4,18 +4,31 @@ import UIKit
 struct ContentView: View {
     @StateObject private var exploit = ExploitManager.shared
     @ObservedObject private var langMgr = LanguageManager.shared
+    @AppStorage("cardio.hide_archived_wallet_items") private var hideArchivedWalletItems = true
     @State private var selectedTab = 0
     @State private var showNoCardsError = false
-    @State private var cards: [Card] = []
+    @State private var paymentCards: [Card] = []
+    @State private var walletPasses: [Card] = []
+    @State private var selectedCardsSection: WalletDisplayCategory = .paymentCards
+    @State private var bundleEditorCard: Card?
     @State private var detectedCardsRoot = "not-detected"
     @State private var offsetInput = ""
+    @State private var isLoadingCards = false
+    @State private var cardsScanGeneration = 0
+    @State private var hasAttemptedInitialScan = false
 
     private let helper = ObjcHelper()
 
     private struct CardBundleCandidate {
         let directoryPath: String
         let bundleName: String
-        let backgroundFileName: String
+        let backgroundFileName: String?
+        let kind: CardKind
+        let passStyle: WalletPassStyle?
+        let displayCategory: WalletDisplayCategory
+        let expirationDate: Date?
+        let relevantDate: Date?
+        let isVoided: Bool
     }
 
     private func joinPath(_ parent: String, _ child: String) -> String {
@@ -73,6 +86,283 @@ struct ContentView: View {
         return []
     }
 
+    private func readFileData(_ path: String, maxSize: Int64 = 512 * 1024) -> Data? {
+        let fm = FileManager.default
+
+        for variant in pathVariants(for: path) {
+            if let data = fm.contents(atPath: variant) {
+                return data
+            }
+        }
+
+        guard exploit.kfsReady else {
+            return nil
+        }
+
+        for variant in pathVariants(for: path) {
+            if let data = helper.kfsReadFile(variant, maxSize: maxSize) {
+                return data
+            }
+        }
+
+        return nil
+    }
+
+    private func trimmedString(_ value: Any?) -> String? {
+        guard let string = value as? String else {
+            return nil
+        }
+
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    private func hasWalletPassManifest(in passDirectory: String) -> Bool {
+        let files = listDirectory(passDirectory)
+        guard !files.isEmpty else {
+            return false
+        }
+
+        let lowercasedFiles = Dictionary(uniqueKeysWithValues: files.map { ($0.lowercased(), $0) })
+        return lowercasedFiles["pass.json"] != nil
+    }
+
+    private func walletPassRepresentativeAsset(in passDirectory: String) -> String? {
+        let files = listDirectory(passDirectory)
+        guard !files.isEmpty else {
+            return nil
+        }
+
+        let preferred = [
+            "strip@3x.png",
+            "strip@2x.png",
+            "strip.png",
+            "background@3x.png",
+            "background@2x.png",
+            "background.png",
+            "thumbnail@3x.png",
+            "thumbnail@2x.png",
+            "thumbnail.png",
+            "logo@3x.png",
+            "logo@2x.png",
+            "logo.png",
+            "icon@3x.png",
+            "icon@2x.png",
+            "icon.png"
+        ]
+
+        let lowercasedFiles = Dictionary(uniqueKeysWithValues: files.map { ($0.lowercased(), $0) })
+        for name in preferred {
+            if let match = lowercasedFiles[name] {
+                return match
+            }
+        }
+
+        return nil
+    }
+
+    private func walletPassManifest(in passDirectory: String) -> [String: Any]? {
+        let passJsonPath = joinPath(passDirectory, "pass.json")
+        guard let data = readFileData(passJsonPath),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+
+        return json
+    }
+
+    private func walletPassDisplayName(in passDirectory: String, fallbackName: String) -> String {
+        guard let json = walletPassManifest(in: passDirectory) else {
+            return fallbackName
+        }
+
+        if let logoText = trimmedString(json["logoText"]) {
+            return logoText
+        }
+
+        if let description = trimmedString(json["description"]) {
+            return description
+        }
+
+        if let organizationName = trimmedString(json["organizationName"]) {
+            return organizationName
+        }
+
+        return fallbackName
+    }
+
+    private func walletPassStyle(in passDirectory: String) -> WalletPassStyle? {
+        guard let json = walletPassManifest(in: passDirectory) else {
+            return nil
+        }
+
+        return WalletPassStyle.detect(in: json)
+    }
+
+    private func parsePassDate(_ rawValue: Any?) -> Date? {
+        guard let rawString = trimmedString(rawValue) else {
+            return nil
+        }
+
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = isoFormatter.date(from: rawString) {
+            return date
+        }
+
+        isoFormatter.formatOptions = [.withInternetDateTime]
+        if let date = isoFormatter.date(from: rawString) {
+            return date
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        let formats = [
+            "yyyy-MM-dd'T'HH:mmZZZZZ",
+            "yyyy-MM-dd'T'HH:mm:ssZZZZZ",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ",
+            "yyyy-MM-dd'T'HH:mmZ",
+            "yyyy-MM-dd'T'HH:mm:ssZ",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+            "yyyy-MM-dd"
+        ]
+
+        for format in formats {
+            dateFormatter.dateFormat = format
+            if let date = dateFormatter.date(from: rawString) {
+                return date
+            }
+        }
+
+        return nil
+    }
+
+    private func passFieldStrings(_ rawFields: Any?) -> [String] {
+        guard let fields = rawFields as? [[String: Any]] else {
+            return []
+        }
+
+        return fields.flatMap { field -> [String] in
+            var strings: [String] = []
+            for key in ["key", "label", "value"] {
+                if let value = field[key] as? String {
+                    strings.append(value)
+                } else if let value = field[key] as? NSNumber {
+                    strings.append(value.stringValue)
+                }
+            }
+            return strings
+        }
+    }
+
+    private func looksLikeMembershipPass(style: WalletPassStyle?, manifest: [String: Any]) -> Bool {
+        let semantics = manifest["semantics"] as? [String: Any] ?? [:]
+        let semanticKeys = semantics.keys.map { $0.lowercased() }
+        if semanticKeys.contains(where: { key in
+            key.contains("membership") || key.contains("loyalty") || key.contains("rewards")
+        }) {
+            return true
+        }
+
+        var textBuckets: [String] = [
+            manifest["logoText"] as? String,
+            manifest["description"] as? String,
+            manifest["organizationName"] as? String
+        ].compactMap { $0 }
+
+        for value in semantics.values {
+            if let string = value as? String {
+                textBuckets.append(string)
+            }
+        }
+
+        if let style, let stylePayload = manifest[style.rawValue] as? [String: Any] {
+            textBuckets.append(contentsOf: passFieldStrings(stylePayload["headerFields"]))
+            textBuckets.append(contentsOf: passFieldStrings(stylePayload["primaryFields"]))
+            textBuckets.append(contentsOf: passFieldStrings(stylePayload["secondaryFields"]))
+            textBuckets.append(contentsOf: passFieldStrings(stylePayload["auxiliaryFields"]))
+            textBuckets.append(contentsOf: passFieldStrings(stylePayload["backFields"]))
+        }
+
+        let haystack = textBuckets
+            .joined(separator: " ")
+            .folding(options: .diacriticInsensitive, locale: .current)
+            .lowercased()
+
+        let keywords = [
+            "membership",
+            "member",
+            "loyalty",
+            "rewards",
+            "reward",
+            "honors",
+            "bonvoy",
+            "club",
+            "status",
+            "member since",
+            "member number",
+            "membership number",
+            "loyalty number",
+            "rewards number",
+            "points",
+            "elite"
+        ]
+
+        return keywords.contains { haystack.contains($0) }
+    }
+
+    private func walletPassCategory(style: WalletPassStyle?, manifest: [String: Any]) -> WalletDisplayCategory {
+        if looksLikeMembershipPass(style: style, manifest: manifest) {
+            return .membershipCards
+        }
+
+        switch style {
+        case .storeCard:
+            return .storeCards
+        case .eventTicket:
+            return .eventTickets
+        case .boardingPass:
+            return .boardingPasses
+        case .generic, .coupon, nil:
+            return .otherPasses
+        }
+    }
+
+    private func bundleCandidate(in directoryPath: String, fallbackName: String) -> CardBundleCandidate? {
+        if let backgroundFile = cardBackgroundFile(in: directoryPath) {
+            return CardBundleCandidate(
+                directoryPath: directoryPath,
+                bundleName: fallbackName,
+                backgroundFileName: backgroundFile,
+                kind: .paymentCard,
+                passStyle: nil,
+                displayCategory: .paymentCards,
+                expirationDate: nil,
+                relevantDate: nil,
+                isVoided: false
+            )
+        }
+
+        if let manifest = walletPassManifest(in: directoryPath) {
+            let style = WalletPassStyle.detect(in: manifest)
+            return CardBundleCandidate(
+                directoryPath: directoryPath,
+                bundleName: walletPassDisplayName(in: directoryPath, fallbackName: fallbackName),
+                backgroundFileName: walletPassRepresentativeAsset(in: directoryPath),
+                kind: .walletPass,
+                passStyle: style,
+                displayCategory: walletPassCategory(style: style, manifest: manifest),
+                expirationDate: parsePassDate(manifest["expirationDate"]),
+                relevantDate: parsePassDate(manifest["relevantDate"]),
+                isVoided: manifest["voided"] as? Bool ?? false
+            )
+        }
+
+        return nil
+    }
+
     private func cardBackgroundFile(in cardDirectory: String) -> String? {
         let files = listDirectory(cardDirectory)
         guard !files.isEmpty else {
@@ -111,15 +401,9 @@ struct ContentView: View {
             }
 
             let candidateDirectory = joinPath(cardsRoot, entry)
-            if let backgroundFile = cardBackgroundFile(in: candidateDirectory) {
+            if let candidate = bundleCandidate(in: candidateDirectory, fallbackName: entry) {
                 if !seenDirectories.contains(candidateDirectory) {
-                    bundles.append(
-                        CardBundleCandidate(
-                            directoryPath: candidateDirectory,
-                            bundleName: entry,
-                            backgroundFileName: backgroundFile
-                        )
-                    )
+                    bundles.append(candidate)
                     seenDirectories.insert(candidateDirectory)
                 }
                 continue
@@ -133,14 +417,9 @@ struct ContentView: View {
                 }
 
                 let nestedDirectory = joinPath(candidateDirectory, nested)
-                if let backgroundFile = cardBackgroundFile(in: nestedDirectory), !seenDirectories.contains(nestedDirectory) {
-                    bundles.append(
-                        CardBundleCandidate(
-                            directoryPath: nestedDirectory,
-                            bundleName: "\(entry)/\(nested)",
-                            backgroundFileName: backgroundFile
-                        )
-                    )
+                if let candidate = bundleCandidate(in: nestedDirectory, fallbackName: "\(entry)/\(nested)"),
+                   !seenDirectories.contains(nestedDirectory) {
+                    bundles.append(candidate)
                     seenDirectories.insert(nestedDirectory)
                 }
             }
@@ -218,7 +497,9 @@ struct ContentView: View {
         let header = [
             "CardioSword diagnostic export",
             "timestamp=\(timestamp)",
+            "runtime_mode=\(exploit.prefersDirectAccessMode ? "direct" : "exploit")",
             "status=\(exploit.statusMessage)",
+            exploit.entitlementSummary,
             "darksword_ready=\(exploit.darkswordReady)",
             "sandbox_escaped=\(exploit.sandboxEscaped)",
             "kernproc_offset=\(exploit.hasKernprocOffset ? String(format: "0x%llx", exploit.kernprocOffset) : "missing")",
@@ -230,55 +511,175 @@ struct ContentView: View {
         return header + body
     }
 
-    private func loadCards() {
-        cards = getPasses()
+    private var hasAnyWalletItems: Bool {
+        !paymentCards.isEmpty || !walletPasses.isEmpty
     }
 
-    private func getPasses() -> [Card] {
-        guard let cardsRoot = discoverCardsRoot() else {
-            detectedCardsRoot = "not-detected"
-            exploit.setDetectedCardsRootPath(nil)
-            return []
+    private var canScanWalletItems: Bool {
+        exploit.canApplyCardChanges
+    }
+
+    private var hasVisibleWalletItems: Bool {
+        !availableCardsSections.isEmpty
+    }
+
+    private var availableCardsSections: [WalletDisplayCategory] {
+        WalletDisplayCategory.allCases.filter { !cards(for: $0).isEmpty }
+    }
+
+    private func cards(for section: WalletDisplayCategory) -> [Card] {
+        let filteredPaymentCards = hideArchivedWalletItems ? paymentCards.filter { !$0.isArchivedLikeWallet } : paymentCards
+        let filteredWalletPasses = hideArchivedWalletItems ? walletPasses.filter { !$0.isArchivedLikeWallet } : walletPasses
+
+        switch section {
+        case .paymentCards:
+            return filteredPaymentCards
+        case .membershipCards, .storeCards, .eventTickets, .boardingPasses, .otherPasses:
+            return filteredWalletPasses.filter { $0.displayCategory == section }
+        }
+    }
+
+    private var visibleCards: [Card] {
+        cards(for: selectedCardsSection)
+    }
+
+    private var shouldShowCardsSectionPicker: Bool {
+        availableCardsSections.count > 1
+    }
+
+    private var cardsPageHeight: CGFloat {
+        visibleCards.map(\.preferredPageHeight).max() ?? WalletDisplayCategory.paymentCards.pageHeight
+    }
+
+    private func normalizeSelectedCardsSection() {
+        if let firstAvailable = availableCardsSections.first,
+           !availableCardsSections.contains(selectedCardsSection) {
+            selectedCardsSection = firstAvailable
+        }
+    }
+
+    private struct PassScanResult {
+        let cardsRoot: String?
+        let paymentCards: [Card]
+        let walletPasses: [Card]
+    }
+
+    private func loadCards() {
+        guard canScanWalletItems else {
+            cardsScanGeneration += 1
+            isLoadingCards = false
+            paymentCards = []
+            walletPasses = []
+            detectedCardsRoot = exploit.detectedCardsRootPath ?? "not-ready"
+            normalizeSelectedCardsSection()
+            return
         }
 
-        exploit.setDetectedCardsRootPath(cardsRoot)
-        detectedCardsRoot = cardsRoot
+        cardsScanGeneration += 1
+        let generation = cardsScanGeneration
+        isLoadingCards = true
 
-        var data = [Card]()
+        DispatchQueue.global(qos: .userInitiated).async {
+            let discovered = scanPasses()
+            DispatchQueue.main.async {
+                guard generation == cardsScanGeneration else {
+                    return
+                }
+
+                detectedCardsRoot = discovered.cardsRoot ?? "not-detected"
+                exploit.setDetectedCardsRootPath(discovered.cardsRoot)
+                paymentCards = discovered.paymentCards
+                walletPasses = discovered.walletPasses
+                isLoadingCards = false
+                normalizeSelectedCardsSection()
+            }
+        }
+    }
+
+    private func scanPasses() -> PassScanResult {
+        guard let cardsRoot = discoverCardsRoot() else {
+            return PassScanResult(cardsRoot: nil, paymentCards: [], walletPasses: [])
+        }
+
+        var paymentCards = [Card]()
+        var otherPasses = [Card]()
 
         let bundles = collectCardBundles(in: cardsRoot)
-        scanLog("final scan root=\(cardsRoot) bundles=\(bundles.count)")
+        scanLog(
+            "final scan root=\(cardsRoot) payment=\(bundles.filter { $0.kind == .paymentCard }.count)" +
+            " membership=\(bundles.filter { $0.displayCategory == .membershipCards }.count)" +
+            " store=\(bundles.filter { $0.displayCategory == .storeCards }.count)" +
+            " event=\(bundles.filter { $0.displayCategory == .eventTickets }.count)" +
+            " boarding=\(bundles.filter { $0.displayCategory == .boardingPasses }.count)" +
+            " other=\(bundles.filter { $0.displayCategory == .otherPasses }.count)" +
+            " archived=\(bundles.filter { $0.isVoided || (($0.expirationDate ?? $0.relevantDate) ?? .distantFuture) < Date() }.count)"
+        )
 
         for bundle in bundles {
-            data.append(
-                Card(
-                    imagePath: joinPath(bundle.directoryPath, bundle.backgroundFileName),
-                    directoryPath: bundle.directoryPath,
-                    bundleName: bundle.bundleName,
-                    backgroundFileName: bundle.backgroundFileName
-                )
+            let card = Card(
+                imagePath: bundle.backgroundFileName.map { joinPath(bundle.directoryPath, $0) } ?? joinPath(bundle.directoryPath, "pass.json"),
+                directoryPath: bundle.directoryPath,
+                bundleName: bundle.bundleName,
+                backgroundFileName: bundle.backgroundFileName,
+                kind: bundle.kind,
+                passStyle: bundle.passStyle,
+                displayCategory: bundle.displayCategory,
+                expirationDate: bundle.expirationDate,
+                relevantDate: bundle.relevantDate,
+                isVoided: bundle.isVoided
             )
+
+            switch bundle.kind {
+            case .paymentCard:
+                paymentCards.append(card)
+            case .walletPass:
+                otherPasses.append(card)
+            }
         }
 
-        return data
+        return PassScanResult(
+            cardsRoot: cardsRoot,
+            paymentCards: paymentCards.sorted { $0.bundleName.localizedCaseInsensitiveCompare($1.bundleName) == .orderedAscending },
+            walletPasses: otherPasses.sorted {
+                if $0.displayCategory != $1.displayCategory {
+                    return WalletDisplayCategory.allCases.firstIndex(of: $0.displayCategory) ?? 0
+                        < WalletDisplayCategory.allCases.firstIndex(of: $1.displayCategory) ?? 0
+                }
+                return $0.bundleName.localizedCaseInsensitiveCompare($1.bundleName) == .orderedAscending
+            }
+        )
     }
 
     private func refreshOffsetInputFromState() {
         if exploit.hasKernprocOffset {
             offsetInput = String(format: "0x%llx", exploit.kernprocOffset)
+        } else {
+            offsetInput = ""
         }
     }
 
-    private func recheckAndReload() {
+    private func refreshExploitTabState() {
         exploit.refreshAccessProbe()
-        exploit.refreshKernprocOffsetState()
+        if !exploit.prefersDirectAccessMode {
+            exploit.refreshKernprocOffsetState()
+        }
+        detectedCardsRoot = exploit.detectedCardsRootPath ?? "not-detected"
+        refreshOffsetInputFromState()
+    }
+
+    private func recheckAndReload() {
+        hasAttemptedInitialScan = true
+        exploit.refreshAccessProbe()
+        if !exploit.prefersDirectAccessMode {
+            exploit.refreshKernprocOffsetState()
+        }
         loadCards()
     }
 
     private func runAllAndReload() {
         exploit.runAll { _ in
             recheckAndReload()
-            if cards.isEmpty {
+            if !hasAnyWalletItems {
                 showNoCardsError = true
             }
         }
@@ -310,23 +711,179 @@ struct ContentView: View {
                     .font(.system(size: 15))
                     .foregroundColor(.white)
 
-                if !cards.isEmpty {
+                if isLoadingCards {
+                    ProgressView("Scanning Wallet bundles…")
+                        .tint(.white)
+                        .foregroundColor(.white.opacity(0.85))
+                        .padding(.top, 4)
+                }
+
+                if !hasAttemptedInitialScan {
+                    Spacer()
+
+                    VStack(spacing: 12) {
+                        Image(systemName: "wallet.pass.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+
+                        Text("Wallet scan is manual on launch")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+
+                        Text("This avoids hanging the first frame while Cardio probes or scans the Wallet bundle tree.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+
+                        Button("Scan Wallet") {
+                            recheckAndReload()
+                        }
+                        .foregroundColor(.cyan)
+
+                        Button(exploit.accessTabTitle) {
+                            selectedTab = 3
+                        }
+                        .foregroundColor(.white)
+                    }
+
+                    Spacer()
+                } else if !canScanWalletItems {
+                    Spacer()
+
+                    VStack(spacing: 12) {
+                        Image(systemName: "lock.slash.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+
+                        Text("Wallet scan unavailable")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+
+                        Text(exploit.blockedReason)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+
+                        if !exploit.prefersDirectAccessMode {
+                            Button("Open Exploit") {
+                                selectedTab = 3
+                            }
+                            .foregroundColor(.cyan)
+                        } else {
+                            Button(exploit.accessTabTitle) {
+                                selectedTab = 3
+                            }
+                            .foregroundColor(.cyan)
+                        }
+
+                        Button("Retry") {
+                            recheckAndReload()
+                        }
+                        .foregroundColor(.white)
+                    }
+
+                    Spacer()
+                } else if hasVisibleWalletItems {
+                    Text(selectedCardsSection.title)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+
+                    Text(selectedCardsSection.subtitle)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white.opacity(0.65))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+
+                    if shouldShowCardsSectionPicker {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(availableCardsSections) { section in
+                                    Button {
+                                        selectedCardsSection = section
+                                    } label: {
+                                        Text(section.title)
+                                            .font(.system(size: 13, weight: .semibold))
+                                            .foregroundColor(selectedCardsSection == section ? .black : .white)
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .background(
+                                                Capsule()
+                                                    .fill(selectedCardsSection == section ? Color.white : Color.white.opacity(0.12))
+                                            )
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
+
+                    Toggle(isOn: $hideArchivedWalletItems) {
+                        Text("Hide Expired")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
+                    .toggleStyle(.switch)
+                    .tint(.cyan)
+                    .padding(.horizontal, 16)
+
                     TabView {
-                        ForEach(cards) { card in
-                            CardView(card: card, exploit: exploit)
+                        ForEach(visibleCards) { card in
+                            CardView(
+                                card: card,
+                                exploit: exploit,
+                                onOpenBundleEditor: { selectedCard in
+                                    bundleEditorCard = selectedCard
+                                }
+                            )
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                    .frame(height: 340)
+                    .frame(height: cardsPageHeight)
 
                     Button("cards_refresh") {
                         loadCards()
-                        if cards.isEmpty {
+                        if !hasAnyWalletItems {
                             showNoCardsError = true
                         }
                     }
                     .foregroundColor(.white)
                     .padding(.top, 16)
+                } else if hasAnyWalletItems {
+                    Spacer()
+
+                    VStack(spacing: 12) {
+                        Image(systemName: "archivebox.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+
+                        Text("No active Wallet items")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+
+                        Text("All scanned passes are currently hidden by the expired-pass filter.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.65))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+
+                        Toggle(isOn: $hideArchivedWalletItems) {
+                            Text("Hide Expired")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .toggleStyle(.switch)
+                        .tint(.cyan)
+                        .padding(.horizontal, 32)
+
+                        Button("cards_refresh") {
+                            loadCards()
+                        }
+                        .foregroundColor(.white)
+                    }
+
+                    Spacer()
                 } else {
                     Spacer()
 
@@ -352,7 +909,7 @@ struct ContentView: View {
 
                         Button("cards_scan_again") {
                             loadCards()
-                            if cards.isEmpty {
+                            if !hasAnyWalletItems {
                                 showNoCardsError = true
                             }
                         }
@@ -416,6 +973,59 @@ struct ContentView: View {
     }
 
     // MARK: - Exploit Tab
+
+    private var directAccessTab: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Direct Access")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text(exploit.statusMessage)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(exploit.canApplyCardChanges ? .green : .orange)
+
+                    Group {
+                        Text("runtime_mode=direct")
+                        Text(exploit.entitlementSummary)
+                        Text("cards_root=\(detectedCardsRoot)")
+                    }
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.8))
+
+                    HStack(spacing: 10) {
+                        Button("Retry Access Probe") {
+                            refreshExploitTabState()
+                        }
+                        .foregroundColor(.cyan)
+
+                        Button("Scan Wallet") {
+                            recheckAndReload()
+                        }
+                        .foregroundColor(.white)
+                    }
+
+                    Button("exploit_copy_logs") {
+                        UIPasteboard.general.string = buildLogExportText()
+                        exploit.addLog("[scan] logs copied to clipboard")
+                    }
+                    .foregroundColor(.white)
+
+                    Text(exploit.logText.isEmpty ? L("exploit_no_logs") : exploit.logText)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(Color.green.opacity(0.9))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(8)
+                        .background(Color.white.opacity(0.06))
+                        .cornerRadius(8)
+                }
+                .padding(14)
+            }
+        }
+    }
 
     private var exploitTab: some View {
         ZStack {
@@ -549,31 +1159,59 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            cardsTab
+            Group {
+                if selectedTab == 0 {
+                    cardsTab
+                } else {
+                    Color.black.ignoresSafeArea()
+                }
+            }
                 .tabItem {
                     Image(systemName: "creditcard.fill")
                     Text("tab_cards")
                 }
                 .tag(0)
 
-            MyCardsView(exploit: exploit, cards: cards)
+            Group {
+                if selectedTab == 1 {
+                    MyCardsView(exploit: exploit, cards: paymentCards)
+                } else {
+                    Color.black.ignoresSafeArea()
+                }
+            }
                 .tabItem {
                     Image(systemName: "tray.full.fill")
                     Text("tab_mycards")
                 }
                 .tag(1)
 
-            CommunityView()
+            Group {
+                if selectedTab == 2 {
+                    CommunityView()
+                } else {
+                    Color.black.ignoresSafeArea()
+                }
+            }
                 .tabItem {
                     Image(systemName: "globe")
                     Text("tab_community")
                 }
                 .tag(2)
 
-            exploitTab
+            Group {
+                if selectedTab == 3 {
+                    if exploit.prefersDirectAccessMode {
+                        directAccessTab
+                    } else {
+                        exploitTab
+                    }
+                } else {
+                    Color.black.ignoresSafeArea()
+                }
+            }
                 .tabItem {
-                    Image(systemName: "terminal.fill")
-                    Text("tab_exploit")
+                    Image(systemName: exploit.accessTabSystemImage)
+                    Text(exploit.accessTabTitle)
                 }
                 .tag(3)
         }
@@ -587,8 +1225,26 @@ struct ContentView: View {
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
 
-            recheckAndReload()
             refreshOffsetInputFromState()
+            normalizeSelectedCardsSection()
+        }
+        .onChange(of: selectedTab) { newTab in
+            if newTab == 3 {
+                refreshExploitTabState()
+            }
+        }
+        .onChange(of: hideArchivedWalletItems) { _ in
+            normalizeSelectedCardsSection()
+        }
+        .sheet(item: $bundleEditorCard) { card in
+            CardView(
+                card: card,
+                exploit: exploit,
+                embeddedBundleEditor: true,
+                onDismissBundleEditor: {
+                    bundleEditorCard = nil
+                }
+            )
         }
     }
 }

@@ -4,9 +4,5 @@
 <dict>
 	<key>UIFileSharingEnabled</key>
 	<true/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>CardioDS needs access to save card images to your photo library.</string>
 </dict>
 </plist>
