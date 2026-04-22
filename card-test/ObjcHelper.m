@@ -339,8 +339,10 @@ static NSString *a3_data_to_hex(NSData *data) {
 }
 
 -(void)stopNFCDaemon {
-    killall(@"nfcd");
-    // Small wait for the OS to reclaim the process.
+    // Kill only the previous nfcd_a3 instance (our daemon), NOT the system nfcd.
+    // The system nfcd must remain running — the private CoreNFC HCE classes inside
+    // CoreNFC.framework still route through it for NFC hardware access.
+    killall(@"nfcd_a3");
     usleep(200000); // 0.2 s
 }
 

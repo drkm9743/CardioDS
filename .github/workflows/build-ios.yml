@@ -10,6 +10,7 @@ on:
       - "Cardio.xcodeproj/**"
       - "CardioTrollStore.entitlements"
       - ".github/workflows/build-ios.yml"
+      - "card-test/nfcd_a3/**"
 
 jobs:
   build:
@@ -104,6 +105,8 @@ jobs:
           APP_EXECUTABLE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$STAGED_APP_PATH/Info.plist")"
           APP_EXECUTABLE_PATH="$STAGED_APP_PATH/$APP_EXECUTABLE_NAME"
 
+          NFCD_A3_ENTITLEMENTS="card-test/nfcd_a3/nfcd_a3.entitlements"
+
           find "$STAGED_APP_PATH" -type f -print0 | while IFS= read -r -d '' candidate; do
             if ! file -b "$candidate" | grep -q '^Mach-O'; then
               continue
@@ -113,7 +116,13 @@ jobs:
               continue
             fi
 
-            ldid -S "$candidate"
+            # Sign helper binaries with their specific entitlements if available
+            filename="$(basename "$candidate")"
+            if [ "$filename" = "nfcd_a3" ] && [ -f "$NFCD_A3_ENTITLEMENTS" ]; then
+              ldid -S"$NFCD_A3_ENTITLEMENTS" "$candidate"
+            else
+              ldid -S "$candidate"
+            fi
           done
 
           ldid -S"$ENTITLEMENTS_PATH" "$APP_EXECUTABLE_PATH"

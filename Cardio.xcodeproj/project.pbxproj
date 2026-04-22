@@ -35,7 +35,19 @@
 		EA00000528F1000000000001 /* NFCCardReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000428F1000000000001 /* NFCCardReader.swift */; };
 		EA00000728F1000000000001 /* NFCDaemonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000628F1000000000001 /* NFCDaemonManager.swift */; };
 		EA00000928F1000000000001 /* NFCEmulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000828F1000000000001 /* NFCEmulationView.swift */; };
+		EA02003028F3000000000001 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA02001028F3000000000001 /* main.m */; };
+		EA02004028F3000000000001 /* nfcd_a3 in CopyFiles */ = {isa = PBXBuildFile; fileRef = EA02000028F3000000000001 /* nfcd_a3 */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EA0200E028F3000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AA5371428E269E100146E99 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA02006028F3000000000001;
+			remoteInfo = nfcd_a3;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		D400000728EB000000DDD001 /* Embed Frameworks */ = {
@@ -48,6 +60,17 @@
 				D400000628EB000000DDD001 /* lib/libgrabkernel2.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA02009028F3000000000001 /* Embed nfcd_a3 */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 1;
+			files = (
+				EA02004028F3000000000001 /* nfcd_a3 in CopyFiles */,
+			);
+			name = "Embed nfcd_a3";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -96,6 +119,9 @@
 		EA00000428F1000000000001 /* NFCCardReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCardReader.swift; sourceTree = "<group>"; };
 		EA00000628F1000000000001 /* NFCDaemonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCDaemonManager.swift; sourceTree = "<group>"; };
 		EA00000828F1000000000001 /* NFCEmulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCEmulationView.swift; sourceTree = "<group>"; };
+		EA02000028F3000000000001 /* nfcd_a3 */ = {isa = PBXFileReference; explicitFileType = compiled.mach-o.executable; includeInIndex = 0; path = nfcd_a3; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA02001028F3000000000001 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EA02002028F3000000000001 /* nfcd_a3.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = nfcd_a3.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +131,13 @@
 			files = (
 				D400000128EB000000DDD001 /* lib/libxpf.dylib in Frameworks */,
 				D400000428EB000000DDD001 /* lib/libgrabkernel2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA02008028F3000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				8AA5371C28E269E100146E99 /* Cardio.app */,
+				EA02000028F3000000000001 /* nfcd_a3 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,6 +185,7 @@
 				D400000228EB000000DDD001 /* lib/libxpf.dylib */,
 				D400000528EB000000DDD001 /* lib/libgrabkernel2.dylib */,
 				EA00000028F1000000000001 /* nfc */,
+				EA02005028F3000000000001 /* nfcd_a3 */,
 			);
 			path = "card-test";
 			sourceTree = "<group>";
@@ -193,6 +228,15 @@
 			path = nfc;
 			sourceTree = "<group>";
 		};
+		EA02005028F3000000000001 /* nfcd_a3 */ = {
+			isa = PBXGroup;
+			children = (
+				EA02001028F3000000000001 /* main.m */,
+				EA02002028F3000000000001 /* nfcd_a3.entitlements */,
+			);
+			path = nfcd_a3;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -205,10 +249,12 @@
 				D400000728EB000000DDD001 /* Embed Frameworks */,
 				D800000128EF000000222001 /* Re-sign Embedded Dylibs */,
 				8AA5371A28E269E100146E99 /* Resources */,
+				EA02009028F3000000000001 /* Embed nfcd_a3 */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				EA0200D028F3000000000001 /* PBXTargetDependency */,
 			);
 			name = Cardio;
 			packageProductDependencies = (
@@ -216,6 +262,22 @@
 			productName = "card-test";
 			productReference = 8AA5371C28E269E100146E99 /* Cardio.app */;
 			productType = "com.apple.product-type.application";
+		};
+		EA02006028F3000000000001 /* nfcd_a3 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA0200C028F3000000000001 /* Build configuration list for PBXNativeTarget "nfcd_a3" */;
+			buildPhases = (
+				EA02007028F3000000000001 /* Sources */,
+				EA02008028F3000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nfcd_a3;
+			productName = nfcd_a3;
+			productReference = EA02000028F3000000000001 /* nfcd_a3 */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -256,6 +318,7 @@
 			projectRoot = "";
 			targets = (
 				8AA5371B28E269E100146E99 /* Cardio */,
+				EA02006028F3000000000001 /* nfcd_a3 */,
 			);
 		};
 /* End PBXProject section */
@@ -297,6 +360,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EA02007028F3000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA02003028F3000000000001 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8AA5371828E269E100146E99 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -326,6 +397,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EA0200D028F3000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA02006028F3000000000001 /* nfcd_a3 */;
+			targetProxy = EA0200E028F3000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D200001128E9000000BBB010 /* Localizable.strings */ = {
@@ -460,6 +539,47 @@
 			};
 			name = Release;
 		};
+		EA0200A028F3000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = nfcd_a3;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		EA0200B028F3000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = nfcd_a3;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		8AA5372B28E269E200146E99 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -572,6 +692,15 @@
 			buildConfigurations = (
 				8AA5372B28E269E200146E99 /* Debug */,
 				8AA5372C28E269E200146E99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA0200C028F3000000000001 /* Build configuration list for PBXNativeTarget "nfcd_a3" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA0200A028F3000000000001 /* Debug */,
+				EA0200B028F3000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
