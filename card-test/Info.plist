@@ -4,5 +4,7 @@
 <dict>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>CardioDS needs NFC access to read physical transit and access cards for import.</string>
 </dict>
 </plist>
