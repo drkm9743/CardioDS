@@ -31,6 +31,10 @@
 		D500000128EC000000EEE001 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D500000228EC000000EEE001 /* LanguageManager.swift */; };
 		D600000128ED000000FFF001 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D600000228ED000000FFF001 /* GitHubService.swift */; };
 		D700000128EE000000111001 /* AssetDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D700000228EE000000111001 /* AssetDocumentPicker.swift */; };
+		EA00000328F1000000000001 /* NFCCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000228F1000000000001 /* NFCCard.swift */; };
+		EA00000528F1000000000001 /* NFCCardReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000428F1000000000001 /* NFCCardReader.swift */; };
+		EA00000728F1000000000001 /* NFCDaemonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000628F1000000000001 /* NFCDaemonManager.swift */; };
+		EA00000928F1000000000001 /* NFCEmulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA00000828F1000000000001 /* NFCEmulationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,6 +92,10 @@
 		D500000228EC000000EEE001 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		D600000228ED000000FFF001 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
 		D700000228EE000000111001 /* AssetDocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDocumentPicker.swift; sourceTree = "<group>"; };
+		EA00000228F1000000000001 /* NFCCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCard.swift; sourceTree = "<group>"; };
+		EA00000428F1000000000001 /* NFCCardReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCardReader.swift; sourceTree = "<group>"; };
+		EA00000628F1000000000001 /* NFCDaemonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCDaemonManager.swift; sourceTree = "<group>"; };
+		EA00000828F1000000000001 /* NFCEmulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCEmulationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +150,7 @@
 				D200001128E9000000BBB010 /* Localizable.strings */,
 				D400000228EB000000DDD001 /* lib/libxpf.dylib */,
 				D400000528EB000000DDD001 /* lib/libgrabkernel2.dylib */,
+				EA00000028F1000000000001 /* nfc */,
 			);
 			path = "card-test";
 			sourceTree = "<group>";
@@ -171,6 +180,17 @@
 				D200000528E9000000BBB001 /* libgrabkernel2.h */,
 			);
 			path = kexploit;
+			sourceTree = "<group>";
+		};
+		EA00000028F1000000000001 /* nfc */ = {
+			isa = PBXGroup;
+			children = (
+				EA00000228F1000000000001 /* NFCCard.swift */,
+				EA00000428F1000000000001 /* NFCCardReader.swift */,
+				EA00000628F1000000000001 /* NFCDaemonManager.swift */,
+				EA00000828F1000000000001 /* NFCEmulationView.swift */,
+			);
+			path = nfc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,6 +318,10 @@
 				D100002028E8000000AAA003 /* CommunityView.swift in Sources */,
 				D100003028E8000000AAA004 /* MyCardsView.swift in Sources */,
 				D200000128E9000000BBB001 /* offsets.m in Sources */,
+				EA00000328F1000000000001 /* NFCCard.swift in Sources */,
+				EA00000528F1000000000001 /* NFCCardReader.swift in Sources */,
+				EA00000728F1000000000001 /* NFCDaemonManager.swift in Sources */,
+				EA00000928F1000000000001 /* NFCEmulationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
