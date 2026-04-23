@@ -1,0 +1,139 @@
+/* CardioDS — Azerbaijani */
+
+/* Tab titles */
+"tab_cards" = "Kartlar";
+"tab_mycards" = "Mənim kartlarım";
+"tab_community" = "Topluluq";
+"tab_exploit" = "Exploit";
+
+/* Cards tab */
+"cards_tap_to_customize" = "Fərdiləşdirmək üçün karta toxun";
+"cards_swipe_hint" = "Fərqli kartlara baxmaq üçün sürüşdür";
+"cards_refresh" = "Kartları yenilə";
+"cards_none_found" = "Kart tapılmadı";
+"cards_none_found_alert" = "Heç bir kart tapılmadı";
+"cards_path_label" = "Yol: %@";
+"cards_last_root" = "Son aşkar edilmiş kart qovluğu: %@";
+"cards_run_exploit_hint" = "Əvvəl Exploit bölməsinə keç və “Hamısını işə sal” düyməsinə bas.";
+"cards_open_wallet" = "Wallet-i aç";
+"cards_run_all_scan" = "Hamısını işə sal + skan et";
+"cards_scan_again" = "Yenidən skan et";
+
+/* Exploit tab */
+"exploit_engine" = "Exploit mühərriki";
+"exploit_offset_placeholder" = "kernproc offset (hex)";
+"exploit_set" = "Təyin et";
+"exploit_running" = "İşləyir...";
+"exploit_run_darksword" = "DarkSword-u işə sal";
+"exploit_escape_sandbox" = "Sandbox-dan çıx";
+"exploit_run_all" = "Hamısını işə sal";
+"exploit_complete" = "Exploit tamamlandı — sandbox-dan çıxıldı";
+"exploit_copy_logs" = "Logları kopyala";
+"exploit_no_logs" = "Hələ log yoxdur.";
+"exploit_resolve_offsets" = "Offsetləri həll et";
+"exploit_resolving" = "Həll edilir...";
+"exploit_clear_cache" = "Kernel keşini təmizlə";
+
+/* Status messages */
+"status_checking" = "Mühit yoxlanılır...";
+"status_ready" = "Hazırdır";
+"status_darksword_running" = "Darksword işləyir...";
+"status_resolving_offsets" = "Kernel offsetləri həll edilir...";
+"status_no_cards_path" = "Kartlar qovluğu hələ aşkar edilməyib. Bir neçə qovluq skanlanacaq.";
+"status_missing_offset" = "kernproc offset yoxdur. Avtomatik həll edilir...";
+"status_run_darksword" = "Əvvəl Darksword-u işə sal.";
+"status_escape_sandbox" = "Fayllara müdaxiləni açmaq üçün sandbox-dan çıx.";
+"status_not_ready" = "Exploit mühiti hazır deyil.";
+"status_no_wallet_path" = "Wallet kart qovluğu məlum yerlərdə tapılmadı.";
+"status_write_available" = "Birbaşa yazma icazəsi mövcuddur.";
+"status_no_write_import_offset" = "Yazma icazəsi yoxdur. Offsetləri həll et, sonra exploit-i işə sal.";
+"status_no_write_run_exploit" = "Yazma icazəsi yoxdur. Darksword + Sandbox Escape et.";
+"status_no_write_escape" = "Yazma icazəsi yoxdur. Əvvəl sandbox-dan çıx.";
+"status_no_write_retry" = "Sandbox çıxışına baxmayaraq yazma icazəsi yoxdur. Yenidən cəhd et.";
+
+/* CardView */
+"card_rename" = "Adını dəyiş";
+"card_restore" = "Bərpa et";
+"card_save" = "Yadda saxla";
+"card_error" = "Xəta";
+"card_ok" = "OK";
+"card_saved" = "Yadda saxlandı";
+"card_saved_message" = "Kart şəkli Documents qovluğuna yadda saxlandı. Files tətbiqindən baxa bilərsən.";
+"card_rename_title" = "Kartın adını dəyiş";
+"card_nickname_placeholder" = "Ləqəb";
+"card_rename_save" = "Yadda saxla";
+"card_clear_name" = "Adı sil";
+"card_cancel" = "Ləğv et";
+"card_rename_message" = "Kartı asan tanımaq üçün ad ver.";
+
+/* My Cards tab */
+"mycards_title" = "Mənim kartlarım";
+"mycards_subtitle" = "Hazırkı Apple Pay kartlarının ehtiyat nüsxəsini saxla.";
+"mycards_backup_all" = "Bütün cari kartların backup-u";
+"mycards_no_device_cards" = "Cihaz kartları tapılmadı. Əvvəl exploit və skan et.";
+"mycards_empty" = "Hələ saxlanmış kart yoxdur";
+"mycards_empty_hint" = "Fərdiləşdirmədən əvvəl kartlarını backup et.";
+"mycards_delete_title" = "Kartı sil";
+"mycards_delete" = "Sil";
+"mycards_delete_confirm" = "Bu kartın ehtiyat nüsxəsi silinsin?";
+"mycards_apply" = "Tətbiq et";
+
+/* Community tab */
+"community_title" = "Topluluq dizaynları";
+"community_subtitle" = "Kart fonlarını yüklə və foto kitabxanadan tətbiq et.";
+"community_search" = "Kart axtar...";
+"community_attribution" = "Topluluqdan kart dizaynları:";
+"community_tap_retry" = "Yenidən cəhd etmək üçün toxun";
+"community_download" = "Yüklə";
+"support_kofi" = "Ko-fi ilə dəstək ol ☕";
+
+/* Card number editor */
+"card_number_edit" = "Nömrə";
+"card_number_title" = "Kart nömrəsini dəyiş";
+"card_number_placeholder" = "Son 4 rəqəm";
+"card_number_message" = "Kartda göstərilən cari nömrə: %@\nYeni rəqəmlər daxil et və ya silmək üçün boş burax.";
+"card_number_message_empty" = "Bu kartda nömrə göstərilmir.\nGöstərmək üçün rəqəmlər daxil et.";
+"card_number_restore_original" = "Orijinalı bərpa et";
+"card_number_read_error" = "Bu kartın pass.json faylı oxuna bilmədi.";
+"card_number_no_backup" = "Bu kart üçün pass.json backup tapılmadı.";
+
+/* Image source picker */
+"card_pick_source" = "Şəkil mənbəyi seç";
+"card_source_gallery" = "Qalereya";
+"card_source_files" = "Fayllar";
+"join_discord" = "Discord-a qoşul";
+
+/* Community save destination */
+"community_save_where" = "Harada saxlanılsın...";
+"community_save_gallery" = "Qalereya";
+"community_save_documents" = "Fayllar";
+
+/* My Cards submit */
+"mycards_submit" = "Göndər";
+"mycards_submit_opened" = "Kartı göndərmək üçün GitHub açılır...";
+"mycards_submit_error" = "GitHub açıla bilmədi.";
+"mycards_submit_read_error" = "Kart məlumatı oxunmadı.";
+
+/* Custom card submission */
+"custom_submit_button" = "Xüsusi kart dizaynı göndər";
+"custom_submit_hint" = "Dizaynın əlavə olunmadan əvvəl yoxlanılacaq.";
+"custom_submit_error" = "Göndərmək alınmadı.";
+"custom_submit_opened" = "Xüsusi kartı göndərmək üçün GitHub açılır...";
+"custom_submit_send" = "Göndər";
+"custom_submitting" = "Göndərilir...";
+"custom_submit_success" = "Kart yoxlama üçün göndərildi!";
+"github_token_missing" = "GitHub tokeni təyin olunmayıb.";
+"github_token_invalid" = "GitHub token müddəti bitib və ya etibarsızdır.";
+"custom_name_title" = "Kart adı";
+"custom_name_placeholder" = "məs. Mənim dizaynım";
+"custom_name_message" = "Kart dizaynın üçün ad daxil et.";
+
+/* Submit sheet */
+"submit_sheet_title" = "Kart göndər";
+"submit_section_info" = "Kart məlumatları";
+"submit_card_name" = "Kart adı";
+"submit_issuer" = "Emitent (məs. Chase, Amex)";
+"submit_country" = "Ölkə (məs. US, ES)";
+
+/* Settings */
+"settings_system_language" = "Sistem dili";
